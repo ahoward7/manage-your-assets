@@ -1,4 +1,4 @@
-s<template>
+<template>
   <div class="w-screen h-screen">
     <NuxtPage />
   </div>
