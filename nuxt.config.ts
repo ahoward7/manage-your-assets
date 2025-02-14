@@ -4,7 +4,12 @@ export default defineNuxtConfig({
   modules: [
     'nuxt-vue3-google-signin'
   ],
+  runtimeConfig: {
+    public: {
+      googleClientId: '573857706739-1b2du7fb2grdveig2pigjh3abhdeg6op.apps.googleusercontent.com'
+    }
+  },
   googleSignIn: {
-    clientId: '573857706739-1b2du7fb2grdveig2pigjh3abhdeg6op.apps.googleusercontent.com',
+    clientId: process.env.GOOGLE_CLIENT_ID || '',
   }
 })
