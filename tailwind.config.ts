@@ -9,8 +9,7 @@ export default {
   ],
   theme: {
     extend: {
-      
+
     },
   },
 }
-

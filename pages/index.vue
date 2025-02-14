@@ -4,27 +4,30 @@
 
     <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError" />
 
-    <button @click="createTestMongoUser">Create Test User</button>
+    <button @click="createTestMongoUser">
+      Create Test User
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { CredentialResponse } from "vue3-google-signin"
+import type { CredentialResponse } from 'vue3-google-signin'
 
-const handleLoginSuccess = (response: CredentialResponse) => {
-  console.log(response)
+function handleLoginSuccess(response: CredentialResponse) {
+  void response
 }
 
-const handleLoginError = (error: Error) => {
+function handleLoginError(error: Error) {
   console.error(error)
 }
 
-const createTestMongoUser = async () => {
-  await $fetch("/user", {
-    method: "POST",
+async function createTestMongoUser() {
+  await $fetch('/user', {
+    method: 'POST',
     body: JSON.stringify({
       name: 'Test User',
-      email: "test.user@gmail.com",
-  })})
+      email: 'test.user@gmail.com',
+    }),
+  })
 }
 </script>
