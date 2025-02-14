@@ -2,7 +2,8 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   modules: [
-    'nuxt-vue3-google-signin'
+    'nuxt-vue3-google-signin',
+    'nuxt-mongoose'
   ],
   runtimeConfig: {
     public: {
@@ -11,5 +12,8 @@ export default defineNuxtConfig({
   },
   googleSignIn: {
     clientId: process.env.GOOGLE_CLIENT_ID || '',
+  },
+  mongoose: {
+    uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/manage-your-assets',
   }
 })
