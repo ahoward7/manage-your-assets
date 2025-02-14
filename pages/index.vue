@@ -14,7 +14,7 @@
       <input v-model="newAccount.lastName" placeholder="Last Name">
       <input v-model="newAccount.email" placeholder="Email">
       <input v-model="newAccount.password" placeholder="Password">
-      <button class="w-full border" @click="postNewAccount">
+      <button class="w-full border" @click="postNewAccount(newAccount)">
         Create Account
       </button>
     </div>
@@ -45,34 +45,24 @@ const newUser: Ref<User> = ref({
 async function handleLoginSuccess(response: CredentialResponse) {
   const accountInfo = accountFromGoogleResponse(response)
 
-  const newAccount: Account = await $fetch('/account', {
-    method: 'POST',
-    body: JSON.stringify({
-      accountInfo,
-    }),
-  })
-
-  newUser.value.email = newAccount.email
-  newUser.value.firstName = newAccount.firstName
-  newUser.value.lastName = newAccount.lastName
-  newUser.value.image = newAccount.image || ''
+  await postNewAccount(accountInfo)
 }
 
-async function postNewAccount() {
-  newUser.value.email = newAccount.value.email
-  newUser.value.firstName = newAccount.value.firstName
-  newUser.value.lastName = newAccount.value.lastName
-  newUser.value.image = newAccount.value.image || ''
+async function postNewAccount(account: Account) {
+  newUser.value.email = account.email
+  newUser.value.firstName = account.firstName
+  newUser.value.lastName = account.lastName
+  newUser.value.image = account.image || ''
 
   const user = await postNewUser()
 
   if (user && user._id) {
-    newAccount.value.user = user._id
+    account.user = user._id
 
     await $fetch('/account', {
       method: 'POST',
       body: JSON.stringify({
-        accountInfo: newAccount.value,
+        accountInfo: account,
       }),
     })
   }
@@ -95,12 +85,7 @@ function accountFromGoogleResponse(response: CredentialResponse): Account {
 async function postNewUser(): Promise<User> {
   return await $fetch('/user', {
     method: 'POST',
-    body: JSON.stringify({
-      email: newUser.value.email,
-      firstName: newUser.value.firstName,
-      lastName: newUser.value.lastName,
-      image: newUser.value.image,
-    }),
+    body: JSON.stringify(newUser.value),
   })
 }
 
