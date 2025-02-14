@@ -2,11 +2,6 @@
   <div class="flex flex-col gap-2">
     <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError" />
 
-    <input v-if="newUser.email" v-model="newAccount.password">
-    <button v-if="newUser.email" @click="postNewUser">
-      Create User
-    </button>
-
     <div>----------------------------------------</div>
 
     <div class="flex flex-col gap-1 px-4 w-96">
@@ -42,10 +37,11 @@ const newUser: Ref<User> = ref({
   image: '',
 })
 
-async function handleLoginSuccess(response: CredentialResponse) {
-  const accountInfo = accountFromGoogleResponse(response)
-
-  await postNewAccount(accountInfo)
+async function postNewUser(): Promise<User> {
+  return await $fetch<User>('/user', {
+    method: 'POST',
+    body: newUser.value,
+  })
 }
 
 async function postNewAccount(account: Account) {
@@ -82,11 +78,16 @@ function accountFromGoogleResponse(response: CredentialResponse): Account {
   }
 }
 
-async function postNewUser(): Promise<User> {
-  return await $fetch('/user', {
-    method: 'POST',
-    body: JSON.stringify(newUser.value),
-  })
+async function handleLoginSuccess(response: CredentialResponse) {
+  const accountInfo = accountFromGoogleResponse(response)
+
+  newAccount.value.client = 'google'
+  newAccount.value.firstName = accountInfo.firstName
+  newAccount.value.lastName = accountInfo.lastName
+  newAccount.value.email = accountInfo.email
+  newAccount.value.image = accountInfo.image || ''
+
+  await postNewAccount(newAccount.value)
 }
 
 function handleLoginError(error: Error) {
