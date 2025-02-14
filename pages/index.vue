@@ -2,7 +2,7 @@
   <div class="flex flex-col gap-2">
     <GoogleSignInButton @success="handleLoginSuccess" @error="handleLoginError" />
 
-    <div>----------------------------------------</div>
+    <div>------------------------------------------------------------------------</div>
 
     <div class="flex flex-col gap-1 px-4 w-96">
       <input v-model="newAccount.firstName" placeholder="First Name">
@@ -11,6 +11,16 @@
       <input v-model="newAccount.password" placeholder="Password">
       <button class="w-full border" @click="postNewAccount(newAccount)">
         Create Account
+      </button>
+    </div>
+
+    <div>------------------------------------------------------------------------</div>
+
+    <div class="flex flex-col gap-1 px-4 w-96">
+      <input v-model="newProfile.role" placeholder="role">
+      <input v-model="newProfile.supervisor" placeholder="supervisor">
+      <button class="w-full border" @click="postNewProfile(newProfile)">
+        Create Profile
       </button>
     </div>
   </div>
@@ -37,6 +47,14 @@ const newUser: Ref<User> = ref({
   image: '',
 })
 
+const newProfile: Ref<Profile> = ref({
+  user: '',
+  role: '',
+  supervisor: '',
+  employees: [],
+  completed: false,
+})
+
 async function postNewUser(): Promise<User> {
   return await $fetch<User>('/user', {
     method: 'POST',
@@ -53,12 +71,27 @@ async function postNewAccount(account: Account) {
   const user = await postNewUser()
 
   if (user && user._id) {
+    newUser.value._id = user._id
+
     account.user = user._id
 
     await $fetch('/account', {
       method: 'POST',
       body: JSON.stringify({
         accountInfo: account,
+      }),
+    })
+  }
+}
+
+async function postNewProfile(profile: Profile) {
+  if (newUser.value._id) {
+    profile.user = newUser.value._id || ''
+
+    await $fetch('/profile', {
+      method: 'POST',
+      body: JSON.stringify({
+        profileInfo: profile,
       }),
     })
   }

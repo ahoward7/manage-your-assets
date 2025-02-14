@@ -31,7 +31,8 @@ export interface Account {
 export interface Profile {
   _id?: string
   user: string
-  role: 'admin' | 'employee' | 'external'
-  supervisor: string
+  role: 'admin' | 'employee' | 'external' | ''
+  supervisor?: string
   employees: string[]
+  completed: boolean
 }
