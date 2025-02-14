@@ -24,4 +24,9 @@ export default defineNuxtConfig({
       standalone: false,
     },
   },
+  imports: {
+    dirs: [
+      'interfaces',
+    ],
+  },
 })
