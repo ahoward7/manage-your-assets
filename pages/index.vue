@@ -31,12 +31,12 @@ const newUser: Ref<User> = ref({
 })
 
 async function handleLoginSuccess(response: CredentialResponse) {
-  const credential = jwtDecode(response.credential || '')
+  const accountInfo = accountFromGoogleResponse(response)
 
   const newAccount: Account = await $fetch('/account', {
     method: 'POST',
     body: JSON.stringify({
-      credential,
+      accountInfo,
     }),
   })
 
@@ -44,6 +44,20 @@ async function handleLoginSuccess(response: CredentialResponse) {
   newUser.value.firstName = newAccount.firstName
   newUser.value.lastName = newAccount.lastName
   newUser.value.image = newAccount.image || ''
+}
+
+function accountFromGoogleResponse(response: CredentialResponse): Account {
+  const { email, given_name, family_name, picture }: GoogleJWT = jwtDecode(response.credential || '')
+
+  return {
+    userId: '',
+    client: 'mya',
+    firstName: given_name,
+    lastName: family_name,
+    email,
+    image: picture,
+    password: '',
+  }
 }
 
 async function postNewUser() {
