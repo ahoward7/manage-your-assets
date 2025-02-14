@@ -1,7 +1,7 @@
-import { model, Schema } from 'mongoose'
+import mongoose, { model, Schema } from 'mongoose'
 
 const ProfileSchema = new Schema({
-  userId: { type: String, required: true }, // one-to-one
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   role: { type: String, enum: ['admin', 'employee', 'external'], required: true },
   supervisor: { type: String, required: true },
   employees: { type: [String], required: true },

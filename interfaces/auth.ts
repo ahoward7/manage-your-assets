@@ -19,7 +19,7 @@ export interface User {
 
 export interface Account {
   _id?: string
-  userId: string
+  user: string
   client: 'google' | 'mya'
   firstName: string
   lastName: string
@@ -30,7 +30,7 @@ export interface Account {
 
 export interface Profile {
   _id?: string
-  userId: string
+  user: string
   role: 'admin' | 'employee' | 'external'
   supervisor: string
   employees: string[]

@@ -1,7 +1,7 @@
-import { model, Schema } from 'mongoose'
+import mongoose, { model, Schema } from 'mongoose'
 
 const AccountSchema = new Schema({
-  userId: { type: String, required: true }, // many-to-one
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   client: { type: String, enum: ['google', 'mya'], required: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
