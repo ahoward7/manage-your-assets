@@ -1,3 +1,5 @@
+export type AuthMode = 'signup' | 'login' | 'profile'
+
 export interface GoogleJWT {
   sub: string
   name: string
