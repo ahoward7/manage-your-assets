@@ -1,15 +1,15 @@
 <template>
-  <div v-if="account" class="flex flex-col gap-4">
+  <div class="flex flex-col gap-4">
     <div class="text-2xl font-bold text-blue-500">
       Create Account
     </div>
     <div class="flex flex-col gap-2">
       <div class="grid grid-cols-2 gap-2">
-        <LoginInput v-model="account.firstName" placeholder="First Name" class="border rounded-md" />
-        <LoginInput v-model="account.lastName" placeholder="Last Name" class="border rounded-md" />
+        <LoginInput v-model="authStore.account.firstName" placeholder="First Name" class="border rounded-md" />
+        <LoginInput v-model="authStore.account.lastName" placeholder="Last Name" class="border rounded-md" />
       </div>
-      <LoginInput v-model="account.email" placeholder="Email" class="border rounded-md" />
-      <LoginInput v-model="account.password" type="password" placeholder="Password" class="border rounded-md" />
+      <LoginInput v-model="authStore.account.email" placeholder="Email" class="border rounded-md" />
+      <LoginInput v-model="authStore.account.password" type="password" placeholder="Password" class="border rounded-md" />
       <LoginInput v-model="passwordConfirmation" type-="password" placeholder="Confirm Password" class="border rounded-md" />
     </div>
     <div class="flex flex-col gap-2">
@@ -36,7 +36,8 @@
 <script setup lang="ts">
 const emit = defineEmits(['signup', 'googleLoginSuccess', 'googleLoginError'])
 
+const authStore = useAuthStore()
+
 const mode = defineModel<AuthMode>('mode')
-const account = defineModel<Account>('account')
 const passwordConfirmation = ref('')
 </script>
