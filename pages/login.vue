@@ -31,6 +31,10 @@ const authStore = useAuthStore()
 
 const mode: Ref<AuthMode> = ref('login')
 
+watch(mode, () => {
+  authStore.reset()
+})
+
 async function handleLoginSuccess(response: CredentialResponse) {
   authStore.googleLogin(response)
 }

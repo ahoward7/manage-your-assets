@@ -40,6 +40,15 @@ export const useAuthStore = defineStore('auth', () => {
     user.value.image = account.value.image || ''
   }
 
+  async function getUser(_id: string): Promise<User> {
+    return await $fetch<User>('/user', {
+      method: 'GET',
+      query: {
+        _id,
+      },
+    })
+  }
+
   async function postUser(): Promise<User> {
     return await $fetch<User>('/user', {
       method: 'POST',
@@ -60,6 +69,18 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function googleLogin(response: CredentialResponse) {
     setAccountFromGoogleResponse(response)
+
+    const existingAccount = await getAccount(account.value.email)
+
+    if (existingAccount?._id) {
+      account.value = existingAccount
+
+      const existingUser = await getUser(existingAccount.user)
+      user.value = existingUser
+
+      return
+    }
+
     await prepareAccount()
     await postAccount()
   }
@@ -75,6 +96,15 @@ export const useAuthStore = defineStore('auth', () => {
 
     user.value._id = postedUser._id
     account.value.user = postedUser._id
+  }
+
+  async function getAccount(email: string): Promise<Account> {
+    return await $fetch<Account>('/account', {
+      method: 'GET',
+      query: {
+        email,
+      },
+    })
   }
 
   async function postAccount(): Promise<Account> {
@@ -93,6 +123,15 @@ export const useAuthStore = defineStore('auth', () => {
     profile.value.user = user.value._id
   }
 
+  async function getProfile(user: string): Promise<Profile> {
+    return await $fetch<Profile>('/profile', {
+      method: 'GET',
+      query: {
+        user,
+      },
+    })
+  }
+
   async function postProfile(): Promise<Profile> {
     return await $fetch<Profile>('/profile', {
       method: 'POST',
@@ -100,16 +139,26 @@ export const useAuthStore = defineStore('auth', () => {
     })
   }
 
+  function reset() {
+    user.value = initialUser
+    account.value = initialAccount
+    profile.value = initialProfile
+  }
+
   return {
     user,
     account,
     profile,
     prepareUser,
+    getUser,
     postUser,
     googleLogin,
     prepareAccount,
+    getAccount,
     postAccount,
     prepareProfile,
+    getProfile,
     postProfile,
+    reset,
   }
 })
