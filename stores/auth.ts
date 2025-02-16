@@ -40,22 +40,6 @@ export const useAuthStore = defineStore('auth', () => {
     user.value.image = account.value.image || ''
   }
 
-  async function getUser(_id: string): Promise<User> {
-    return await $fetch<User>('/user', {
-      method: 'GET',
-      query: {
-        _id,
-      },
-    })
-  }
-
-  async function postUser(): Promise<User> {
-    return await $fetch<User>('/user', {
-      method: 'POST',
-      body: user.value,
-    })
-  }
-
   // ACCOUNT
   function setAccountFromGoogleResponse(response: CredentialResponse) {
     const { email, given_name, family_name, picture }: GoogleJWT = jwtDecode(response.credential || '')
@@ -70,41 +54,41 @@ export const useAuthStore = defineStore('auth', () => {
   async function googleLogin(response: CredentialResponse) {
     setAccountFromGoogleResponse(response)
 
-    const existingAccount = await getAccount(account.value.email)
+    const existingAccount = await accountApi.get({ email: account.value.email })
 
     if (existingAccount?._id) {
       account.value = existingAccount
 
-      const existingUser = await getUser(existingAccount.user)
+      const existingUser = await userApi.get({ _id: existingAccount.user })
       user.value = existingUser
 
       return
     }
 
     await prepareAccount()
-    await postAccount()
+    await accountApi.post(account.value)
   }
 
   async function myaLogin() {
-    const existingAccount = await getAccount(account.value.email)
+    const existingAccount = await accountApi.get({ email: account.value.email })
 
     if (existingAccount?._id) {
       account.value = existingAccount
 
-      const existingUser = await getUser(existingAccount.user)
+      const existingUser = await userApi.get({ _id: existingAccount.user })
       user.value = existingUser
 
       return
     }
 
     await prepareAccount()
-    await postAccount()
+    await accountApi.post(account.value)
   }
 
   async function prepareAccount() {
     prepareUser()
 
-    const postedUser = await postUser()
+    const postedUser = await userApi.post(user.value)
 
     if (!postedUser?._id) {
       return
@@ -114,22 +98,6 @@ export const useAuthStore = defineStore('auth', () => {
     account.value.user = postedUser._id
   }
 
-  async function getAccount(email: string): Promise<Account> {
-    return await $fetch<Account>('/account', {
-      method: 'GET',
-      query: {
-        email,
-      },
-    })
-  }
-
-  async function postAccount(): Promise<Account> {
-    return await $fetch<Account>('/account', {
-      method: 'POST',
-      body: account.value,
-    })
-  }
-
   // PROFILE
   function prepareProfile() {
     if (!user.value._id) {
@@ -137,22 +105,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     profile.value.user = user.value._id
-  }
-
-  async function getProfile(user: string): Promise<Profile> {
-    return await $fetch<Profile>('/profile', {
-      method: 'GET',
-      query: {
-        user,
-      },
-    })
-  }
-
-  async function postProfile(): Promise<Profile> {
-    return await $fetch<Profile>('/profile', {
-      method: 'POST',
-      body: profile.value,
-    })
   }
 
   function reset() {
@@ -166,16 +118,10 @@ export const useAuthStore = defineStore('auth', () => {
     account,
     profile,
     prepareUser,
-    getUser,
-    postUser,
     googleLogin,
     myaLogin,
     prepareAccount,
-    getAccount,
-    postAccount,
     prepareProfile,
-    getProfile,
-    postProfile,
     reset,
   }
 })
