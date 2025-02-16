@@ -85,6 +85,22 @@ export const useAuthStore = defineStore('auth', () => {
     await postAccount()
   }
 
+  async function myaLogin() {
+    const existingAccount = await getAccount(account.value.email)
+
+    if (existingAccount?._id) {
+      account.value = existingAccount
+
+      const existingUser = await getUser(existingAccount.user)
+      user.value = existingUser
+
+      return
+    }
+
+    await prepareAccount()
+    await postAccount()
+  }
+
   async function prepareAccount() {
     prepareUser()
 
@@ -153,6 +169,7 @@ export const useAuthStore = defineStore('auth', () => {
     getUser,
     postUser,
     googleLogin,
+    myaLogin,
     prepareAccount,
     getAccount,
     postAccount,

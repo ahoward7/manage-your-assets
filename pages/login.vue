@@ -8,16 +8,16 @@
         @google-login-error="handleLoginError"
         @login="login"
       />
-      <AuthSignup
-        v-if="mode === 'signup'"
+      <AuthCreateAccount
+        v-if="mode === 'create'"
         v-model:mode="mode"
         @google-login-success="handleLoginSuccess"
         @google-login-error="handleLoginError"
-        @login="login"
+        @create-account="login"
       />
-      <pre>
-        {{ authStore.user }}
+      <pre class="text-xs">
         {{ authStore.account }}
+        {{ authStore.user }}
         {{ authStore.profile }}
       </pre>
     </div>
@@ -44,7 +44,7 @@ function handleLoginError(error: Error) {
 }
 
 function login() {
-  console.log('login')
+  authStore.myaLogin()
 }
 </script>
 

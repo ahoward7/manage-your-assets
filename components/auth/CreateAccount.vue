@@ -13,7 +13,7 @@
       <LoginInput v-model="passwordConfirmation" type-="password" placeholder="Confirm Password" class="border rounded-md" />
     </div>
     <div class="flex flex-col gap-2">
-      <ButtonPrimary class="py-2" @click="mode = 'signup'">
+      <ButtonPrimary class="py-2" @click="emit('createAccount')">
         Create Account
       </ButtonPrimary>
       <ButtonSecondary class="py-2" @click="mode = 'login'">
@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-const emit = defineEmits(['signup', 'googleLoginSuccess', 'googleLoginError'])
+const emit = defineEmits(['createAccount', 'googleLoginSuccess', 'googleLoginError'])
 
 const authStore = useAuthStore()
 

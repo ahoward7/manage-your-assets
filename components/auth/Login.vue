@@ -11,7 +11,7 @@
       <ButtonPrimary class="py-2" @click="emit('login')">
         Login
       </ButtonPrimary>
-      <ButtonSecondary class="py-2" @click="mode = 'signup'">
+      <ButtonSecondary class="py-2" @click="mode = 'create'">
         Create Account
       </ButtonSecondary>
     </div>
