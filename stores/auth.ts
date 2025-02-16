@@ -1,5 +1,4 @@
 import type { CredentialResponse } from 'vue3-google-signin'
-import jwtDecode from 'jwt-decode'
 import { defineStore } from 'pinia'
 
 const initialUser: User = {
@@ -33,40 +32,44 @@ export const useAuthStore = defineStore('auth', () => {
   const profile: Ref<Profile> = ref(initialProfile)
 
   // USER
-  function prepareUser() {
-    user.value.email = account.value.email
-    user.value.firstName = account.value.firstName
-    user.value.lastName = account.value.lastName
-    user.value.image = account.value.image || ''
+  function userFromGoogleAccount(googleAccount: GoogleAccount): User {
+    return {
+      email: googleAccount.email,
+      firstName: googleAccount.firstName,
+      lastName: googleAccount.lastName,
+      image: googleAccount.image || '',
+    }
   }
 
   // ACCOUNT
-  function setAccountFromGoogleResponse(response: CredentialResponse) {
-    const { email, given_name, family_name, picture }: GoogleJWT = jwtDecode(response.credential || '')
+  async function fillExistingInformation(existingAccount: Account) {
+    account.value = existingAccount
 
-    account.value.client = 'google'
-    account.value.firstName = given_name
-    account.value.lastName = family_name
-    account.value.email = email
-    account.value.image = picture || ''
+    const existingUser = await userApi.get({ _id: existingAccount.user })
+    user.value = existingUser
+  }
+
+  async function createNewAccount(googleAccount: GoogleAccount) {
+    const newUser = userFromGoogleAccount(googleAccount)
+    const userWithId = await userApi.post(newUser)
+    user.value = userWithId
+
+    account.value = { ...googleAccount, user: userWithId._id || '' }
+    await accountApi.post(account.value)
   }
 
   async function googleLogin(response: CredentialResponse) {
-    setAccountFromGoogleResponse(response)
+    const googleAccount: GoogleAccount = accountFromGoogleResponse(response)
+    const email = googleAccount.email || ''
 
-    const existingAccount = await accountApi.get({ email: account.value.email })
+    const potentialAccount = await accountApi.get({ email })
 
-    if (existingAccount?._id) {
-      account.value = existingAccount
-
-      const existingUser = await userApi.get({ _id: existingAccount.user })
-      user.value = existingUser
-
-      return
+    if (potentialAccount) {
+      fillExistingInformation(potentialAccount)
     }
-
-    await prepareAccount()
-    await accountApi.post(account.value)
+    else {
+      createNewAccount(googleAccount)
+    }
   }
 
   async function myaLogin() {
@@ -81,21 +84,7 @@ export const useAuthStore = defineStore('auth', () => {
       return
     }
 
-    await prepareAccount()
     await accountApi.post(account.value)
-  }
-
-  async function prepareAccount() {
-    prepareUser()
-
-    const postedUser = await userApi.post(user.value)
-
-    if (!postedUser?._id) {
-      return
-    }
-
-    user.value._id = postedUser._id
-    account.value.user = postedUser._id
   }
 
   // PROFILE
@@ -107,6 +96,7 @@ export const useAuthStore = defineStore('auth', () => {
     profile.value.user = user.value._id
   }
 
+  // OTHER
   function reset() {
     user.value = initialUser
     account.value = initialAccount
@@ -117,10 +107,8 @@ export const useAuthStore = defineStore('auth', () => {
     user,
     account,
     profile,
-    prepareUser,
     googleLogin,
     myaLogin,
-    prepareAccount,
     prepareProfile,
     reset,
   }

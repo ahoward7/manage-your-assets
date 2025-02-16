@@ -21,6 +21,14 @@ export interface User {
   image?: string
 }
 
+export interface GoogleAccount {
+  client: 'google'
+  firstName: string
+  lastName: string
+  email: string
+  image?: string
+}
+
 export interface Account {
   _id?: string
   user: string
