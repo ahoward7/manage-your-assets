@@ -28,9 +28,11 @@ const initialProfile: Profile = {
 }
 
 const initialLoginForm: LoginForm = {
+  client: 'mya',
   firstName: '',
   lastName: '',
   email: '',
+  image: '',
   password: '',
   confirmPassword: '',
 }
@@ -66,11 +68,11 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  async function createUserAndAccount(newUser: User, newAccount: Account | GoogleAccount) {
+  async function createUserAndAccount(newUser: User, loginInfo: LoginForm | GoogleAccount) {
     try {
       const userWithId = await userApi.post(newUser)
       user.value = userWithId
-      account.value = { ...newAccount, user: userWithId._id || '' }
+      account.value = { ...loginInfo, user: userWithId._id || '' }
       await accountApi.post(account.value)
     }
     catch (error) {
@@ -88,12 +90,12 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  function userFromAccount(accountData: Account): User {
+  function userFromAccount(loginInfo: LoginForm): User {
     return {
-      email: accountData.email,
-      firstName: accountData.firstName,
-      lastName: accountData.lastName,
-      image: accountData.image || '',
+      email: loginInfo.email,
+      firstName: loginInfo.firstName,
+      lastName: loginInfo.lastName,
+      image: loginInfo.image || '',
     }
   }
 
@@ -113,9 +115,9 @@ export const useAuthStore = defineStore('auth', () => {
     await createUserAndAccount(newUser, googleAccount)
   }
 
-  async function createAccount(accountData: Account) {
-    const newUser = userFromAccount(accountData)
-    await createUserAndAccount(newUser, accountData)
+  async function createAccount(loginInfo: LoginForm) {
+    const newUser = userFromAccount(loginInfo)
+    await createUserAndAccount(newUser, loginInfo)
   }
 
   // Google login
@@ -187,7 +189,7 @@ export const useAuthStore = defineStore('auth', () => {
           return
         }
 
-        await createAccount(account.value)
+        await createAccount(loginInfo)
         return
       }
 

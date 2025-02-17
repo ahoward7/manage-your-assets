@@ -7,7 +7,7 @@
       Google login successful! Please confirm your password to update your account.
     </InfoMessage>
     <InfoMessage v-if="authStore.noAccountExists">
-      Account with this email does not exist. Please create fill in the form below.
+      Account with this email does not exist. Please fill in the form below.
     </InfoMessage>
     <div class="flex flex-col gap-2">
       <div class="grid grid-cols-2 gap-2">

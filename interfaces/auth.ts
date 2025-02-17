@@ -51,9 +51,11 @@ export interface Profile {
 }
 
 export interface LoginForm {
+  client: 'google' | 'mya'
   firstName: string
   lastName: string
   email: string
+  image: string
   password: string
   confirmPassword: string
 }
