@@ -9,6 +9,9 @@
     <InfoMessage v-if="authStore.noAccountExists">
       Account with this email does not exist. Please fill in the form below.
     </InfoMessage>
+    <InfoMessage v-if="authStore.accountAlreadyExists" type="error">
+      An account already exists with this email. Please login or use a different email.
+    </InfoMessage>
     <div class="flex flex-col gap-2">
       <div class="grid grid-cols-2 gap-2">
         <LoginInput v-model="authStore.loginForm.firstName" placeholder="First Name" class="border rounded-md" />
@@ -25,7 +28,7 @@
       <ButtonPrimary class="py-2" @click="emit('createAccount', authStore.loginForm)">
         {{ authStore.googleAccountExistsWithoutMyaAccount ? 'Update' : 'Create' }} Account
       </ButtonPrimary>
-      <ButtonSecondary class="py-2" @click="authStore.mode = 'login'">
+      <ButtonSecondary class="py-2" @click="setToLogin">
         Login
       </ButtonSecondary>
     </div>
@@ -46,4 +49,9 @@
 const emit = defineEmits(['createAccount', 'googleLoginSuccess', 'googleLoginError'])
 
 const authStore = useAuthStore()
+
+function setToLogin() {
+  authStore.reset()
+  authStore.mode = 'login'
+}
 </script>

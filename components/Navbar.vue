@@ -32,7 +32,7 @@ const profileOptions: SelectOption[] = [
 ]
 
 function logout() {
-  authStore.reset()
+  authStore.reset('/login')
 }
 
 function editProfile() {

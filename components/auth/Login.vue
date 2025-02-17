@@ -11,7 +11,7 @@
       <ButtonPrimary class="py-2" @click="emit('login', authStore.loginForm)">
         Login
       </ButtonPrimary>
-      <ButtonSecondary class="py-2" @click="authStore.mode = 'create'">
+      <ButtonSecondary class="py-2" @click="setToCreate">
         Create Account
       </ButtonSecondary>
     </div>
@@ -32,4 +32,9 @@
 const emit = defineEmits(['login', 'googleLoginSuccess', 'googleLoginError'])
 
 const authStore = useAuthStore()
+
+function setToCreate() {
+  authStore.reset()
+  authStore.mode = 'create'
+}
 </script>

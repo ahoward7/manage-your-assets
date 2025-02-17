@@ -18,11 +18,6 @@
         @google-login-success="verifyEmail"
         @google-login-error="handleLoginError"
       />
-      <pre class="text-xs">
-        {{ authStore.account }}
-        {{ authStore.user }}
-        {{ authStore.profile }}
-      </pre>
     </div>
   </div>
 </template>

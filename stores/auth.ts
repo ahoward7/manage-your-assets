@@ -47,6 +47,7 @@ export const useAuthStore = defineStore('auth', () => {
   const mode: Ref<AuthMode> = ref('login')
   const googleAccountExistsWithoutMyaAccount: Ref<boolean> = ref(false)
   const noAccountExists: Ref<boolean> = ref(false)
+  const accountAlreadyExists: Ref<boolean> = ref(false)
   const passwordsNotMatching: Ref<boolean> = ref(false)
 
   // API calls
@@ -214,6 +215,11 @@ export const useAuthStore = defineStore('auth', () => {
         return
       }
 
+      if (mode.value === 'create') {
+        accountAlreadyExists.value = true
+        return
+      }
+
       if (passwordSetByGoogle(potentialAccount)) {
         setMyaAccountCreationFromGoogleAccount(potentialAccount)
         return
@@ -231,13 +237,20 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  function reset() {
+  function reset(toUrl?: string) {
     user.value = { ...initialUser }
     account.value = { ...initialAccount }
     profile.value = { ...initialProfile }
+    loginForm.value = { ...initialLoginForm }
     isLoggedIn.value = false
+    noAccountExists.value = false
+    accountAlreadyExists.value = false
+    passwordsNotMatching.value = false
+    googleAccountExistsWithoutMyaAccount.value = false
     mode.value = 'login'
-    navigateTo('/login')
+
+    if (toUrl)
+      navigateTo(toUrl)
   }
 
   return {
@@ -249,6 +262,7 @@ export const useAuthStore = defineStore('auth', () => {
     mode,
     googleAccountExistsWithoutMyaAccount,
     noAccountExists,
+    accountAlreadyExists,
     passwordsNotMatching,
     googleLogin,
     verifyGoogleEmail,
