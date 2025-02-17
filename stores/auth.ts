@@ -1,7 +1,7 @@
 import type { CredentialResponse } from 'vue3-google-signin'
 import { defineStore } from 'pinia'
 
-// ✅ Define initial state values
+// Initial state
 const initialUser: User = {
   email: '',
   firstName: '',
@@ -95,12 +95,12 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // Create new accounts
-  async function createNewAccountFromGoogle(googleAccount: GoogleAccount) {
+  async function createAccountFromGoogle(googleAccount: GoogleAccount) {
     const newUser = userFromGoogleAccount(googleAccount)
     await createUserAndAccount(newUser, googleAccount)
   }
 
-  async function createNewAccount(accountData: Account) {
+  async function createAccount(accountData: Account) {
     const newUser = userFromAccount(accountData)
     await createUserAndAccount(newUser, accountData)
   }
@@ -120,7 +120,7 @@ export const useAuthStore = defineStore('auth', () => {
         await fillExistingInformation(potentialAccount)
       }
       else {
-        await createNewAccountFromGoogle(googleAccount)
+        await createAccountFromGoogle(googleAccount)
       }
     }
     catch (error) {
@@ -137,7 +137,7 @@ export const useAuthStore = defineStore('auth', () => {
         await fillExistingInformation(potentialAccount)
       }
       else {
-        await createNewAccount(account.value)
+        await createAccount(account.value)
       }
     }
     catch (error) {
