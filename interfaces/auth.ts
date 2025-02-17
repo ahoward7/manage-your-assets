@@ -1,3 +1,7 @@
+export type AuthMode = 'create' | 'login' | 'profile'
+export type ModelEndpoint = 'user' | 'account' | 'profile'
+export type MongoModel = User | Account | Profile
+
 export interface GoogleJWT {
   sub: string
   name: string
@@ -14,6 +18,14 @@ export interface User {
   email: string
   firstName: string
   lastName: string
+  image?: string
+}
+
+export interface GoogleAccount {
+  client: 'google'
+  firstName: string
+  lastName: string
+  email: string
   image?: string
 }
 
