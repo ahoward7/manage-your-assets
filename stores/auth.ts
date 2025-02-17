@@ -1,4 +1,5 @@
 import type { CredentialResponse } from 'vue3-google-signin'
+import nuxtStorage from 'nuxt-storage'
 import { defineStore } from 'pinia'
 
 // Initial state
@@ -111,6 +112,7 @@ export const useAuthStore = defineStore('auth', () => {
     if (existingUser) {
       user.value = existingUser
       isLoggedIn.value = true
+      nuxtStorage.localStorage.setData('mya-auth-account', account.value, 60 * 60 * 24 * 7)
       navigateTo('/')
     }
   }
@@ -156,7 +158,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // Local login (mya)
-  function checkPassword(account: Account, loginInfo: LoginForm) {
+  function checkPassword(account: Account, loginInfo: LoginForm | Account) {
     return account.password === loginInfo.password
   }
 
@@ -242,6 +244,17 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  async function loginFromLocalStorage(accountFromLocalStorage: Account) {
+    const existingAccount = await getAccountByEmail(accountFromLocalStorage.email)
+
+    if (!existingAccount || !checkPassword(existingAccount, accountFromLocalStorage)) {
+      console.error('Session data corrupted')
+      return
+    }
+
+    await fillExistingInformation(existingAccount)
+  }
+
   function reset(toUrl?: string) {
     user.value = { ...initialUser }
     account.value = { ...initialAccount }
@@ -274,6 +287,7 @@ export const useAuthStore = defineStore('auth', () => {
     verifyGoogleEmail,
     confirmPassword,
     myaLogin,
+    loginFromLocalStorage,
     reset,
   }
 })
