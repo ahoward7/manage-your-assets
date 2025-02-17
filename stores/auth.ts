@@ -42,6 +42,8 @@ export const useAuthStore = defineStore('auth', () => {
   const account: Ref<Account> = ref({ ...initialAccount })
   const profile: Ref<Profile> = ref({ ...initialProfile })
   const loginForm: Ref<LoginForm> = ref({ ...initialLoginForm })
+
+  const isLoggedIn: Ref<boolean> = ref(false)
   const mode: Ref<AuthMode> = ref('login')
   const googleAccountExistsWithoutMyaAccount: Ref<boolean> = ref(false)
   const noAccountExists: Ref<boolean> = ref(false)
@@ -106,6 +108,8 @@ export const useAuthStore = defineStore('auth', () => {
     const existingUser = await getUserById(existingAccount.user)
     if (existingUser) {
       user.value = existingUser
+      isLoggedIn.value = true
+      navigateTo('/')
     }
   }
 
@@ -231,6 +235,9 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = { ...initialUser }
     account.value = { ...initialAccount }
     profile.value = { ...initialProfile }
+    isLoggedIn.value = false
+    mode.value = 'login'
+    navigateTo('/login')
   }
 
   return {
@@ -238,6 +245,7 @@ export const useAuthStore = defineStore('auth', () => {
     account,
     profile,
     loginForm,
+    isLoggedIn,
     mode,
     googleAccountExistsWithoutMyaAccount,
     noAccountExists,

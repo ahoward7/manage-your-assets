@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@antfu/eslint-config": "^4.2.0",
+    "@iconify/vue": "^4.3.0",
     "@nuxt/eslint": "^1.0.1",
     "@nuxt/fonts": "^0.10.3",
     "@nuxtjs/tailwindcss": "6.13.1",
@@ -23,6 +24,7 @@
     "nuxt-mongoose": "^1.0.6",
     "nuxt-vue3-google-signin": "^0.0.11",
     "pinia": "^3.0.1",
+    "radix-vue": "^1.9.14",
     "vue": "latest",
     "vue-router": "latest"
   },
