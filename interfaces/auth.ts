@@ -1,4 +1,4 @@
-export type AuthMode = 'create' | 'login' | 'profile'
+export type AuthMode = 'create' | 'login' | 'google' | 'profile'
 export type ModelEndpoint = 'user' | 'account' | 'profile'
 export type MongoModel = User | Account | Profile
 
@@ -27,6 +27,7 @@ export interface GoogleAccount {
   lastName: string
   email: string
   image?: string
+  password: string | 'SET_BY_GOOGLE'
 }
 
 export interface Account {
@@ -47,4 +48,12 @@ export interface Profile {
   supervisor?: string
   employees: string[]
   completed: boolean
+}
+
+export interface LoginForm {
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+  confirmPassword: string
 }

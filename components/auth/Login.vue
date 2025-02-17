@@ -4,14 +4,14 @@
       Login
     </div>
     <div class="flex flex-col">
-      <LoginInput v-model="authStore.account.email" placeholder="Email" class="rounded-t-md border-x border-t" />
-      <LoginInput v-model="authStore.account.password" placeholder="Password" class="rounded-b-md border" />
+      <LoginInput v-model="authStore.loginForm.email" placeholder="Email" class="rounded-t-md border-x border-t" />
+      <LoginInput v-model="authStore.loginForm.password" type="password" placeholder="Password" class="rounded-b-md border" />
     </div>
     <div class="flex flex-col gap-2">
-      <ButtonPrimary class="py-2" @click="emit('login')">
+      <ButtonPrimary class="py-2" @click="emit('login', authStore.loginForm)">
         Login
       </ButtonPrimary>
-      <ButtonSecondary class="py-2" @click="mode = 'create'">
+      <ButtonSecondary class="py-2" @click="authStore.mode = 'create'">
         Create Account
       </ButtonSecondary>
     </div>
@@ -32,6 +32,4 @@
 const emit = defineEmits(['login', 'googleLoginSuccess', 'googleLoginError'])
 
 const authStore = useAuthStore()
-
-const mode = defineModel<AuthMode>('mode')
 </script>

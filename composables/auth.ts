@@ -14,6 +14,20 @@ class ModelApi<T extends MongoModel> {
       body,
     }) as T
   }
+
+  async put(body: T): Promise<T> {
+    return await $fetch(`/${this.endpoint}`, {
+      method: 'PUT',
+      body,
+    }) as T
+  }
+
+  async delete(query: { [key: string]: string }): Promise<T> {
+    return await $fetch(`/${this.endpoint}`, {
+      method: 'DELETE',
+      query,
+    }) as T
+  }
 }
 
 export const userApi = new ModelApi<User>('user')
