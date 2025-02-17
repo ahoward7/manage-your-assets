@@ -49,6 +49,7 @@ export const useAuthStore = defineStore('auth', () => {
   const noAccountExists: Ref<boolean> = ref(false)
   const accountAlreadyExists: Ref<boolean> = ref(false)
   const passwordsNotMatching: Ref<boolean> = ref(false)
+  const invalidPassword: Ref<boolean> = ref(false)
 
   // API calls
   async function getUserById(userId: string): Promise<User | null> {
@@ -190,7 +191,11 @@ export const useAuthStore = defineStore('auth', () => {
       if (!potentialAccount) {
         if (mode.value !== 'create') {
           noAccountExists.value = true
-          mode.value = 'create'
+          return
+        }
+
+        if (!confirmPassword()) {
+          passwordsNotMatching.value = true
           return
         }
 
@@ -226,7 +231,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       if (!checkPassword(potentialAccount, loginInfo)) {
-        console.error('Invalid password')
+        invalidPassword.value = true
         return
       }
 
@@ -264,6 +269,7 @@ export const useAuthStore = defineStore('auth', () => {
     noAccountExists,
     accountAlreadyExists,
     passwordsNotMatching,
+    invalidPassword,
     googleLogin,
     verifyGoogleEmail,
     confirmPassword,
