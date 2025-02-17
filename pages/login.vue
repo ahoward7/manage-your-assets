@@ -2,24 +2,22 @@
   <div class="flex justify-center items-center">
     <div class="w-[360px] bg-white pt-4 pb-6 px-6 rounded-xl shadow-md mb-40">
       <AuthLogin
-        v-if="mode === 'login'"
-        v-model:mode="mode"
+        v-if="authStore.mode === 'login'"
         @google-login-success="handleLoginSuccess"
         @google-login-error="handleLoginError"
         @login="login"
       />
       <AuthCreateAccount
-        v-if="mode === 'create'"
-        v-model:mode="mode"
+        v-if="authStore.mode === 'create'"
         @google-login-success="handleLoginSuccess"
         @google-login-error="handleLoginError"
         @create-account="login"
       />
-      <pre class="text-xs">
-        {{ authStore.account }}
-        {{ authStore.user }}
-        {{ authStore.profile }}
-      </pre>
+      <AuthForceGoogleLogin
+        v-if="authStore.mode === 'google'"
+        @google-login-success="verifyEmail"
+        @google-login-error="handleLoginError"
+      />
     </div>
   </div>
 </template>
@@ -29,12 +27,6 @@ import type { CredentialResponse } from 'vue3-google-signin'
 
 const authStore = useAuthStore()
 
-const mode: Ref<AuthMode> = ref('login')
-
-watch(mode, () => {
-  authStore.reset()
-})
-
 async function handleLoginSuccess(response: CredentialResponse) {
   authStore.googleLogin(response)
 }
@@ -43,8 +35,14 @@ function handleLoginError(error: Error) {
   console.error(error)
 }
 
-function login() {
-  authStore.myaLogin()
+function login(loginInfo: LoginForm) {
+  authStore.myaLogin(loginInfo)
+}
+
+function verifyEmail(response: CredentialResponse) {
+  if (authStore.verifyGoogleEmail(response)) {
+    authStore.mode = 'create'
+  }
 }
 </script>
 

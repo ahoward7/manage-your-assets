@@ -3,20 +3,32 @@
     <div class="text-2xl font-bold text-blue-500">
       Create Account
     </div>
+    <InfoMessage v-if="authStore.googleAccountExistsWithoutMyaAccount">
+      Google login successful! Please confirm your password to update your account.
+    </InfoMessage>
+    <InfoMessage v-if="authStore.noAccountExists">
+      Account with this email does not exist. Please fill in the form below.
+    </InfoMessage>
+    <InfoMessage v-if="authStore.accountAlreadyExists" type="error">
+      An account already exists with this email. Please login or use a different email.
+    </InfoMessage>
     <div class="flex flex-col gap-2">
       <div class="grid grid-cols-2 gap-2">
-        <LoginInput v-model="authStore.account.firstName" placeholder="First Name" class="border rounded-md" />
-        <LoginInput v-model="authStore.account.lastName" placeholder="Last Name" class="border rounded-md" />
+        <LoginInput v-model="authStore.loginForm.firstName" placeholder="First Name" class="border rounded-md" />
+        <LoginInput v-model="authStore.loginForm.lastName" placeholder="Last Name" class="border rounded-md" />
       </div>
-      <LoginInput v-model="authStore.account.email" placeholder="Email" class="border rounded-md" />
-      <LoginInput v-model="authStore.account.password" type="password" placeholder="Password" class="border rounded-md" />
-      <LoginInput v-model="passwordConfirmation" type-="password" placeholder="Confirm Password" class="border rounded-md" />
+      <LoginInput v-model="authStore.loginForm.email" placeholder="Email" class="border rounded-md" />
+      <LoginInput v-model="authStore.loginForm.password" type="password" placeholder="Password" class="border rounded-md" />
+      <LoginInput v-model="authStore.loginForm.confirmPassword" type="password" placeholder="Confirm Password" class="border rounded-md" />
+      <InfoMessage v-if="authStore.passwordsNotMatching" type="error">
+        Passwords do not match.
+      </InfoMessage>
     </div>
     <div class="flex flex-col gap-2">
-      <ButtonPrimary class="py-2" @click="emit('createAccount')">
-        Create Account
+      <ButtonPrimary class="py-2" @click="emit('createAccount', authStore.loginForm)">
+        {{ authStore.googleAccountExistsWithoutMyaAccount ? 'Update' : 'Create' }} Account
       </ButtonPrimary>
-      <ButtonSecondary class="py-2" @click="mode = 'login'">
+      <ButtonSecondary class="py-2" @click="setToLogin">
         Login
       </ButtonSecondary>
     </div>
@@ -28,7 +40,7 @@
       <div class="flex-1 border" />
     </div>
     <div>
-      <GoogleSignInButton id="google-button" @success="emit('googleLoginSuccess')" @error="emit('googleLoginError')" />
+      <GoogleSignInButton id="google-button" @success="emit('googleLoginSuccess', $event)" @error="emit('googleLoginError', $event)" />
     </div>
   </div>
 </template>
@@ -38,6 +50,8 @@ const emit = defineEmits(['createAccount', 'googleLoginSuccess', 'googleLoginErr
 
 const authStore = useAuthStore()
 
-const mode = defineModel<AuthMode>('mode')
-const passwordConfirmation = ref('')
+function setToLogin() {
+  authStore.reset()
+  authStore.mode = 'login'
+}
 </script>

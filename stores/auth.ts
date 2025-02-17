@@ -27,10 +27,28 @@ const initialProfile: Profile = {
   completed: false,
 }
 
+const initialLoginForm: LoginForm = {
+  client: 'mya',
+  firstName: '',
+  lastName: '',
+  email: '',
+  image: '',
+  password: '',
+  confirmPassword: '',
+}
+
 export const useAuthStore = defineStore('auth', () => {
   const user: Ref<User> = ref({ ...initialUser })
   const account: Ref<Account> = ref({ ...initialAccount })
   const profile: Ref<Profile> = ref({ ...initialProfile })
+  const loginForm: Ref<LoginForm> = ref({ ...initialLoginForm })
+
+  const isLoggedIn: Ref<boolean> = ref(false)
+  const mode: Ref<AuthMode> = ref('login')
+  const googleAccountExistsWithoutMyaAccount: Ref<boolean> = ref(false)
+  const noAccountExists: Ref<boolean> = ref(false)
+  const accountAlreadyExists: Ref<boolean> = ref(false)
+  const passwordsNotMatching: Ref<boolean> = ref(false)
 
   // API calls
   async function getUserById(userId: string): Promise<User | null> {
@@ -53,11 +71,11 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  async function createUserAndAccount(newUser: User, newAccount: Account | GoogleAccount) {
+  async function createUserAndAccount(newUser: User, loginInfo: LoginForm | GoogleAccount) {
     try {
       const userWithId = await userApi.post(newUser)
       user.value = userWithId
-      account.value = { ...newAccount, user: userWithId._id || '' }
+      account.value = { ...loginInfo, user: userWithId._id || '' }
       await accountApi.post(account.value)
     }
     catch (error) {
@@ -75,12 +93,12 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  function userFromAccount(accountData: Account): User {
+  function userFromAccount(loginInfo: LoginForm): User {
     return {
-      email: accountData.email,
-      firstName: accountData.firstName,
-      lastName: accountData.lastName,
-      image: accountData.image || '',
+      email: loginInfo.email,
+      firstName: loginInfo.firstName,
+      lastName: loginInfo.lastName,
+      image: loginInfo.image || '',
     }
   }
 
@@ -91,6 +109,8 @@ export const useAuthStore = defineStore('auth', () => {
     const existingUser = await getUserById(existingAccount.user)
     if (existingUser) {
       user.value = existingUser
+      isLoggedIn.value = true
+      navigateTo('/')
     }
   }
 
@@ -100,9 +120,9 @@ export const useAuthStore = defineStore('auth', () => {
     await createUserAndAccount(newUser, googleAccount)
   }
 
-  async function createAccount(accountData: Account) {
-    const newUser = userFromAccount(accountData)
-    await createUserAndAccount(newUser, accountData)
+  async function createAccount(loginInfo: LoginForm) {
+    const newUser = userFromAccount(loginInfo)
+    await createUserAndAccount(newUser, loginInfo)
   }
 
   // Google login
@@ -120,7 +140,8 @@ export const useAuthStore = defineStore('auth', () => {
         await fillExistingInformation(potentialAccount)
       }
       else {
-        await createAccountFromGoogle(googleAccount)
+        const googleAccountWithPassword = { ...googleAccount, password: 'SET_BY_GOOGLE' }
+        await createAccountFromGoogle(googleAccountWithPassword)
       }
     }
     catch (error) {
@@ -128,34 +149,124 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  // Local login (mya)
-  async function myaLogin() {
-    try {
-      const potentialAccount = await getAccountByEmail(account.value.email)
+  function verifyGoogleEmail(response: CredentialResponse) {
+    const googleAccount: GoogleAccount = accountFromGoogleResponse(response)
+    return googleAccount.email === loginForm.value.email
+  }
 
-      if (potentialAccount) {
-        await fillExistingInformation(potentialAccount)
+  // Local login (mya)
+  function checkPassword(account: Account, loginInfo: LoginForm) {
+    return account.password === loginInfo.password
+  }
+
+  function confirmPassword() {
+    return loginForm.value.password === loginForm.value.confirmPassword
+  }
+
+  function passwordSetByGoogle(account: Account) {
+    return account.password === 'SET_BY_GOOGLE'
+  }
+
+  function setMyaAccountCreationFromGoogleAccount(account: Account) {
+    loginForm.value.firstName = account.firstName
+    loginForm.value.lastName = account.lastName
+    googleAccountExistsWithoutMyaAccount.value = true
+    mode.value = 'google'
+  }
+
+  async function patchAccountPassword(account: Account, newPassword: string): Promise<Account | undefined> {
+    try {
+      return await accountApi.put({ ...account, password: newPassword })
+    }
+    catch (error) {
+      console.error('Error updating account password:', error)
+    }
+  }
+
+  async function myaLogin(loginInfo: LoginForm) {
+    try {
+      const potentialAccount = await getAccountByEmail(loginInfo.email)
+
+      if (!potentialAccount) {
+        if (mode.value !== 'create') {
+          noAccountExists.value = true
+          mode.value = 'create'
+          return
+        }
+
+        await createAccount(loginInfo)
+        return
       }
-      else {
-        await createAccount(account.value)
+
+      if (googleAccountExistsWithoutMyaAccount.value) {
+        if (!confirmPassword()) {
+          passwordsNotMatching.value = true
+          return
+        }
+
+        const patchedAccount = await patchAccountPassword(potentialAccount, loginInfo.password)
+
+        if (!patchedAccount) {
+          console.error('Failed to patch account password')
+          return
+        }
+
+        await fillExistingInformation(patchedAccount)
+        return
       }
+
+      if (mode.value === 'create') {
+        accountAlreadyExists.value = true
+        return
+      }
+
+      if (passwordSetByGoogle(potentialAccount)) {
+        setMyaAccountCreationFromGoogleAccount(potentialAccount)
+        return
+      }
+
+      if (!checkPassword(potentialAccount, loginInfo)) {
+        console.error('Invalid password')
+        return
+      }
+
+      await fillExistingInformation(potentialAccount)
     }
     catch (error) {
       console.error('Mya login failed:', error)
     }
   }
 
-  function reset() {
+  function reset(toUrl?: string) {
     user.value = { ...initialUser }
     account.value = { ...initialAccount }
     profile.value = { ...initialProfile }
+    loginForm.value = { ...initialLoginForm }
+    isLoggedIn.value = false
+    noAccountExists.value = false
+    accountAlreadyExists.value = false
+    passwordsNotMatching.value = false
+    googleAccountExistsWithoutMyaAccount.value = false
+    mode.value = 'login'
+
+    if (toUrl)
+      navigateTo(toUrl)
   }
 
   return {
     user,
     account,
     profile,
+    loginForm,
+    isLoggedIn,
+    mode,
+    googleAccountExistsWithoutMyaAccount,
+    noAccountExists,
+    accountAlreadyExists,
+    passwordsNotMatching,
     googleLogin,
+    verifyGoogleEmail,
+    confirmPassword,
     myaLogin,
     reset,
   }
