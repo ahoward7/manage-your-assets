@@ -1,5 +1,5 @@
 <template>
-  <div class="text-sm font-semibold px-3 py-2 rounded-md" :class="typeClass">
+  <div class="text-sm font-semibold rounded-md" :class="typeClass">
     <slot />
   </div>
 </template>
@@ -15,9 +15,9 @@ const props = defineProps({
 type MessageType = 'info' | 'error' | 'success'
 
 const typeClasses: Record<MessageType, string> = {
-  info: 'text-blue-500 bg-blue-100',
-  error: 'text-red-500 bg-red-100',
-  success: 'text-green-500 bg-green-100',
+  info: 'text-blue-500 bg-blue-100 px-3 py-2',
+  error: 'text-red-500 px-1',
+  success: 'text-green-500 bg-green-100 px-3 py-2',
 }
 
 const typeClass = computed(() => {
