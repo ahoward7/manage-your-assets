@@ -3,7 +3,7 @@
     <div class="text-2xl font-bold text-blue-500">
       Login
     </div>
-    <InfoMessage v-if="authStore.noAccountExists || authStore.invalidPassword" type="error">
+    <InfoMessage v-if="authStore.loginInfo.noAccountExists || authStore.loginInfo.invalidPassword" type="error">
       Email or password is incorrect. Please try again or create an account.
     </InfoMessage>
     <div class="flex flex-col">

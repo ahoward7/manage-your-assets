@@ -1,3 +1,5 @@
+import type { CredentialResponse } from 'vue3-google-signin'
+
 class ModelApi<T extends MongoModel> {
   constructor(private endpoint: ModelEndpoint) {}
 
@@ -30,6 +32,47 @@ class ModelApi<T extends MongoModel> {
   }
 }
 
+class AuthApi {
+  async googleLogin(googleResponse: CredentialResponse): Promise<Account> {
+    const publicConfig = useRuntimeConfig().public
+
+    return await $fetch(`${publicConfig.base_url}/auth/google`, {
+      method: 'POST',
+      body: googleResponse,
+    }) as Account
+  }
+
+  async login(email: string, password: string): Promise<Account> {
+    const publicConfig = useRuntimeConfig().public
+
+    return await $fetch(`${publicConfig.base_url}/auth/login`, {
+      method: 'POST',
+      body: { email, password },
+    }) as Account
+  }
+
+  async register(user: User, account: Account): Promise<Account> {
+    const publicConfig = useRuntimeConfig().public
+
+    return await $fetch(`${publicConfig.base_url}/auth/register`, {
+      method: 'POST',
+      body: { user, account },
+    }) as Account
+  }
+
+  async user(id: string): Promise<User> {
+    const publicConfig = useRuntimeConfig().public
+
+    return await $fetch(`${publicConfig.base_url}/auth/user`, {
+      method: 'PUT',
+      body: { id },
+    }) as User
+  }
+}
+
+export const useAuthApi = () => new AuthApi()
+
 export const userApi = new ModelApi<User>('user')
 export const accountApi = new ModelApi<Account>('account')
 export const profileApi = new ModelApi<Profile>('profile')
+export const authApi = new AuthApi()

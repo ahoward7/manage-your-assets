@@ -6,6 +6,6 @@ export default defineNuxtRouteMiddleware(() => {
   const userFromLocalStorage = nuxtStorage.localStorage.getData('mya-auth-account')
 
   if (userFromLocalStorage) {
-    authStore.loginFromLocalStorage(userFromLocalStorage)
+    authStore.loginWithToken(userFromLocalStorage)
   }
 })

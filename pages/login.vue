@@ -7,7 +7,7 @@
         @google-login-error="handleLoginError"
         @login="login"
       />
-      <AuthCreateAccount
+      <!-- <AuthCreateAccount
         v-if="authStore.mode === 'create'"
         @google-login-success="handleLoginSuccess"
         @google-login-error="handleLoginError"
@@ -17,7 +17,7 @@
         v-if="authStore.mode === 'google'"
         @google-login-success="verifyEmail"
         @google-login-error="handleLoginError"
-      />
+      /> -->
     </div>
   </div>
 </template>
@@ -36,14 +36,14 @@ function handleLoginError(error: Error) {
 }
 
 function login(loginInfo: LoginForm) {
-  authStore.myaLogin(loginInfo)
+  authStore.login(loginInfo)
 }
 
-function verifyEmail(response: CredentialResponse) {
-  if (authStore.verifyGoogleEmail(response)) {
-    authStore.mode = 'create'
-  }
-}
+// function verifyEmail(response: CredentialResponse) {
+//   if (authStore.verifyGoogleEmail(response)) {
+//     authStore.mode = 'create'
+//   }
+// }
 </script>
 
 <style>
