@@ -1,4 +1,4 @@
-import type { CredentialResponse } from 'vue3-google-signin'
+import type { AuthCodeFlowSuccessResponse } from 'vue3-google-signin'
 import { defineStore } from 'pinia'
 
 // Initial state
@@ -57,9 +57,10 @@ export const useAuthStore = defineStore('auth', () => {
   })
 
   // Login
-  async function googleLogin(response: CredentialResponse) {
+  async function googleLogin(response: AuthCodeFlowSuccessResponse) {
     try {
-      return await authStoreApi.googleLogin(response)
+      const googleAccount = await authStoreApi.googleLogin(response)
+      console.log('Google Account', googleAccount)
     }
     catch (error) {
       console.error('Google Login Failed: Can\'t communicate with the API', error)
@@ -68,11 +69,8 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function login(loginInfo: LoginForm) {
     try {
-      const account = await authStoreApi.login(loginInfo.email, loginInfo.password)
-
-      console.log(account)
-
-      return account
+      const user = await authStoreApi.login(loginInfo)
+      return user
     }
     catch (error) {
       console.error('MYA Login Failed: Could not communicate with API', error)
@@ -81,6 +79,16 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function loginWithToken(token: string) {
     console.log('Logging in with token', token)
+  }
+
+  async function register(loginInfo: LoginForm) {
+    try {
+      const newAccount = await authStoreApi.register(loginInfo)
+      return newAccount
+    }
+    catch (error) {
+      console.error('Register Failed: Could not communicate with API', error)
+    }
   }
 
   function reset(toUrl?: string) {
@@ -111,6 +119,7 @@ export const useAuthStore = defineStore('auth', () => {
     mode,
     googleLogin,
     login,
+    register,
     loginWithToken,
     reset,
   }

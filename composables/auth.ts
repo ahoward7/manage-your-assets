@@ -1,4 +1,4 @@
-import type { CredentialResponse } from 'vue3-google-signin'
+import type { AuthCodeFlowSuccessResponse } from 'vue3-google-signin'
 
 class ModelApi<T extends MongoModel> {
   constructor(private endpoint: ModelEndpoint) {}
@@ -33,37 +33,32 @@ class ModelApi<T extends MongoModel> {
 }
 
 class AuthApi {
-  async googleLogin(googleResponse: CredentialResponse): Promise<Account> {
-    const publicConfig = useRuntimeConfig().public
-
-    return await $fetch(`${publicConfig.base_url}/auth/google`, {
+  async googleLogin(googleResponse: AuthCodeFlowSuccessResponse): Promise<Account> {
+    const { access_token } = googleResponse
+    return await $fetch('/auth/google', {
       method: 'POST',
-      body: googleResponse,
+      body: { access_token },
     }) as Account
   }
 
-  async login(email: string, password: string): Promise<Account> {
-    const publicConfig = useRuntimeConfig().public
+  async login(loginInfo: LoginForm): Promise<Account> {
+    const { email, password } = loginInfo
 
-    return await $fetch(`${publicConfig.base_url}/auth/login`, {
+    return await $fetch('/auth/login', {
       method: 'POST',
       body: { email, password },
     }) as Account
   }
 
-  async register(user: User, account: Account): Promise<Account> {
-    const publicConfig = useRuntimeConfig().public
-
-    return await $fetch(`${publicConfig.base_url}/auth/register`, {
+  async register(loginInfo: LoginForm): Promise<Account> {
+    return await $fetch('/auth/register', {
       method: 'POST',
-      body: { user, account },
+      body: loginInfo,
     }) as Account
   }
 
   async user(id: string): Promise<User> {
-    const publicConfig = useRuntimeConfig().public
-
-    return await $fetch(`${publicConfig.base_url}/auth/user`, {
+    return await $fetch('/auth/user', {
       method: 'PUT',
       body: { id },
     }) as User

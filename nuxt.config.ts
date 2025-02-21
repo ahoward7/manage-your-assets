@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   modules: ['nuxt-vue3-google-signin', 'nuxt-mongoose', '@nuxt/eslint', '@nuxtjs/tailwindcss', '@pinia/nuxt'],
   runtimeConfig: {
     public: {
-      base_url: process.env.BASE_URL || 'http://localhost:3000',
+      baseUrl: process.env.BASE_URL || 'http://localhost:3000',
     },
   },
   googleSignIn: {

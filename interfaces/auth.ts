@@ -1,8 +1,8 @@
-export type AuthMode = 'create' | 'login' | 'google' | 'profile'
+export type AuthMode = 'register' | 'login' | 'google' | 'profile'
 export type ModelEndpoint = 'user' | 'account' | 'profile'
 export type MongoModel = User | Account | Profile
 export type UserRole = 'admin' | 'employee' | 'external' | ''
-export type AccountClient = 'google' | 'mya'
+export type AccountClient = 'google' | 'mya' | 'merged'
 
 // Base
 interface BaseEntity {
@@ -26,7 +26,6 @@ export interface BaseAccount {
   client: AccountClient
   email: string
   password: string
-  image: string
 }
 
 export interface Account extends BaseEntity, BaseAccount {}
