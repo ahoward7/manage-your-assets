@@ -33,28 +33,28 @@ class ModelApi<T extends MongoModel> {
 }
 
 class AuthApi {
-  async googleLogin(googleResponse: AuthCodeFlowSuccessResponse): Promise<Account> {
+  async googleLogin(googleResponse: AuthCodeFlowSuccessResponse): Promise<User> {
     const { access_token } = googleResponse
     return await $fetch('/auth/google', {
       method: 'POST',
       body: { access_token },
-    }) as Account
+    }) as User
   }
 
-  async login(loginInfo: LoginForm): Promise<Account> {
+  async login(loginInfo: LoginForm): Promise<User> {
     const { email, password } = loginInfo
 
     return await $fetch('/auth/login', {
       method: 'POST',
       body: { email, password },
-    }) as Account
+    }) as User
   }
 
-  async register(loginInfo: LoginForm): Promise<Account> {
+  async register(loginInfo: LoginForm): Promise<User> {
     return await $fetch('/auth/register', {
       method: 'POST',
       body: loginInfo,
-    }) as Account
+    }) as User
   }
 
   async user(id: string): Promise<User> {

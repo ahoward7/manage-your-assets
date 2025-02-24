@@ -4,9 +4,9 @@
       Manage Your Assets
     </NuxtLink>
     <div>
-      <div v-if="authStore.isLoggedIn" class="flex items-center gap-2">
+      <div v-if="authStore.loginInfo.isLoggedIn" class="flex items-center gap-2">
         <span class="text-sm">Logged in as:</span>
-        <MyaSelect v-if="authStore.user.firstName" :label="authStore.user.firstName" :options="profileOptions" @select="selectOption" />
+        <MyaSelect :label="authStore.user.firstName" :options="profileOptions" @select="selectOption" />
       </div>
       <NuxtLink v-else to="/login" class="flex gap-2">
         <ButtonPrimary>
