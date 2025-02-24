@@ -37,7 +37,9 @@ class AuthApi {
     const { access_token } = googleResponse
     return await $fetch('/auth/google', {
       method: 'POST',
-      body: { access_token },
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
     }) as User
   }
 
