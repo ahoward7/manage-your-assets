@@ -3,7 +3,7 @@
     <div class="text-2xl font-bold text-blue-500">
       Login
     </div>
-    <InfoMessage v-if="authStore.noAccountExists || authStore.invalidPassword" type="error">
+    <InfoMessage v-if="authStore.loginInfo.noAccountExists || authStore.loginInfo.invalidPassword" type="error">
       Email or password is incorrect. Please try again or create an account.
     </InfoMessage>
     <div class="flex flex-col">
@@ -17,7 +17,7 @@
       <ButtonPrimary class="py-2" @click="validateLogin">
         Login
       </ButtonPrimary>
-      <ButtonSecondary class="py-2" @click="setToCreate">
+      <ButtonSecondary class="py-2" @click="setToRegister">
         Create Account
       </ButtonSecondary>
     </div>
@@ -29,13 +29,13 @@
       <div class="flex-1 border" />
     </div>
     <div>
-      <GoogleSignInButton id="google-button" @success="emit('googleLoginSuccess', $event)" @error="emit('googleLoginError', $event)" />
+      <ButtonGoogle @click="emit('googleLogin')" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const emit = defineEmits(['login', 'googleLoginSuccess', 'googleLoginError'])
+const emit = defineEmits(['login', 'googleLogin'])
 
 const authStore = useAuthStore()
 
@@ -69,8 +69,8 @@ function validateLogin() {
   }
 }
 
-function setToCreate() {
+function setToRegister() {
   authStore.reset()
-  authStore.mode = 'create'
+  authStore.mode = 'register'
 }
 </script>

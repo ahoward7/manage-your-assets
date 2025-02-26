@@ -3,10 +3,10 @@
     <div class="text-2xl font-bold text-blue-500">
       Create Account
     </div>
-    <InfoMessage v-if="authStore.googleAccountExistsWithoutMyaAccount">
+    <InfoMessage v-if="authStore.loginInfo.onlyGoogleAccountExists">
       Google login successful! Please confirm your password to update your account.
     </InfoMessage>
-    <InfoMessage v-if="authStore.accountAlreadyExists" type="error">
+    <InfoMessage v-if="authStore.loginInfo.accountAlreadyExists" type="error">
       An account already exists with this email. Please login or use a different email.
     </InfoMessage>
     <div class="flex flex-col gap-2">
@@ -15,9 +15,9 @@
         <LoginInput v-model="authStore.loginForm.lastName" placeholder="Last Name" class="border rounded-md" :invalid="validation.lastName.invalid" />
       </div>
       <LoginInput v-model="authStore.loginForm.email" placeholder="Email" class="border rounded-md" :invalid="validation.email.invalid" />
-      <LoginInput v-model="authStore.loginForm.password" type="password" placeholder="Password" class="border rounded-md" :invalid="validation.password.invalid || authStore.passwordsNotMatching" />
-      <LoginInput v-model="authStore.loginForm.confirmPassword" type="password" placeholder="Confirm Password" class="border rounded-md" :invalid="validation.confirmPassword.invalid || authStore.passwordsNotMatching" />
-      <InfoMessage v-if="authStore.passwordsNotMatching" type="error">
+      <LoginInput v-model="authStore.loginForm.password" type="password" placeholder="Password" class="border rounded-md" :invalid="validation.password.invalid || authStore.loginInfo.passwordsNotMatching" />
+      <LoginInput v-model="authStore.loginForm.confirmPassword" type="password" placeholder="Confirm Password" class="border rounded-md" :invalid="validation.confirmPassword.invalid || authStore.loginInfo.passwordsNotMatching" />
+      <InfoMessage v-if="authStore.loginInfo.passwordsNotMatching" type="error">
         Passwords do not match.
       </InfoMessage>
       <InfoMessage v-if="invalidLogin" type="error">
@@ -26,7 +26,7 @@
     </div>
     <div class="flex flex-col gap-2">
       <ButtonPrimary class="py-2" @click="validateAccount">
-        {{ authStore.googleAccountExistsWithoutMyaAccount ? 'Update' : 'Create' }} Account
+        {{ authStore.loginInfo.onlyGoogleAccountExists ? 'Update' : 'Create' }} Account
       </ButtonPrimary>
       <ButtonSecondary class="py-2" @click="setToLogin">
         Login
@@ -40,13 +40,13 @@
       <div class="flex-1 border" />
     </div>
     <div>
-      <GoogleSignInButton id="google-button" @success="emit('googleLoginSuccess', $event)" @error="emit('googleLoginError', $event)" />
+      <ButtonGoogle @click="emit('googleLogin')" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const emit = defineEmits(['createAccount', 'googleLoginSuccess', 'googleLoginError'])
+const emit = defineEmits(['register', 'googleLogin'])
 
 const authStore = useAuthStore()
 
@@ -101,7 +101,7 @@ function validateAccount() {
   })
 
   if (isValid) {
-    emit('createAccount', authStore.loginForm)
+    emit('register', authStore.loginForm)
   }
 }
 
