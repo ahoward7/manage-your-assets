@@ -6,6 +6,9 @@
     <InfoMessage v-if="authStore.loginInfo.noAccountExists || authStore.loginInfo.invalidPassword" type="error">
       Email or password is incorrect. Please try again or create an account.
     </InfoMessage>
+    <InfoMessage v-if="authStore.loginInfo.onlyGoogleAccountExists">
+      This email is already associated with a Google account. Please login with Google or create a new account.
+    </InfoMessage>
     <div class="flex flex-col">
       <LoginInput v-model="authStore.loginForm.email" placeholder="Email" class="rounded-t-md border-x border-t" :invalid="validation.email.invalid" />
       <LoginInput v-model="authStore.loginForm.password" type="password" placeholder="Password" class="rounded-b-md border" :invalid="validation.password.invalid" />

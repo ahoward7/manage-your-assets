@@ -1,3 +1,4 @@
+import type { FetchError } from 'ofetch'
 import type { AuthCodeFlowSuccessResponse } from 'vue3-google-signin'
 import { defineStore } from 'pinia'
 
@@ -49,6 +50,8 @@ export const useAuthStore = defineStore('auth', () => {
     noAccountExists: false,
     accountAlreadyExists: false,
     onlyGoogleAccountExists: false,
+    unauthorizedGoogleAccount: false,
+    registerAccountFailed: false,
     passwordsNotMatching: false,
     invalidPassword: false,
   })
@@ -67,7 +70,15 @@ export const useAuthStore = defineStore('auth', () => {
       return loggedInUser
     }
     catch (error) {
-      console.error('Google Login Failed: Can\'t communicate with the API', error)
+      const fetchError = error as FetchError<any>
+
+      switch (fetchError.response?.status) {
+        case 401:
+          loginInfo.value.unauthorizedGoogleAccount = true
+          break
+        default:
+          console.error('Google Login Failed: Could not communicate with API', error)
+      }
     }
   }
 
@@ -83,8 +94,22 @@ export const useAuthStore = defineStore('auth', () => {
       loginInfo.value.isLoggedIn = true
       return loggedInUser
     }
-    catch (error) {
-      console.error('MYA Login Failed: Could not communicate with API', error)
+    catch (error: any) {
+      const fetchError = error as FetchError<any>
+
+      switch (fetchError.response?.status) {
+        case 401:
+          loginInfo.value.invalidPassword = true
+          break
+        case 404:
+          loginInfo.value.noAccountExists = true
+          break
+        case 409:
+          loginInfo.value.onlyGoogleAccountExists = true
+          break
+        default:
+          console.error('Login Failed: Could not communicate with API', error)
+      }
     }
   }
 
@@ -92,12 +117,13 @@ export const useAuthStore = defineStore('auth', () => {
     console.log('Logging in with token', token)
   }
 
-  async function register(loginInfo: LoginForm) {
+  async function register(loginFormData: LoginForm) {
     try {
-      const newAccount = await authStoreApi.register(loginInfo)
+      const newAccount = await authStoreApi.register(loginFormData)
       return newAccount
     }
     catch (error) {
+      loginInfo.value.registerAccountFailed = true
       console.error('Register Failed: Could not communicate with API', error)
     }
   }
@@ -112,6 +138,8 @@ export const useAuthStore = defineStore('auth', () => {
       noAccountExists: false,
       accountAlreadyExists: false,
       onlyGoogleAccountExists: false,
+      unauthorizedGoogleAccount: false,
+      registerAccountFailed: false,
       passwordsNotMatching: false,
       invalidPassword: false,
     }
