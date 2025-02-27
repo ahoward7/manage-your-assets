@@ -9,6 +9,9 @@
     <InfoMessage v-if="authStore.loginInfo.accountAlreadyExists" type="error">
       An account already exists with this email. Please login or use a different email.
     </InfoMessage>
+    <InfoMessage v-if="authStore.loginInfo.registerAccountFailed" type="error">
+      Account creation failed. Please refresh page and try again.
+    </InfoMessage>
     <div class="flex flex-col gap-2">
       <div class="grid grid-cols-2 gap-2">
         <LoginInput v-model="authStore.loginForm.firstName" placeholder="First Name" class="border rounded-md" :invalid="validation.firstName.invalid" />
