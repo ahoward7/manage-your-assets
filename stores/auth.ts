@@ -67,6 +67,8 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = loggedInUser
       loginInfo.value.isLoggedIn = true
 
+      navigateTo('/')
+
       return loggedInUser
     }
     catch (error: any) {
@@ -90,8 +92,18 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function register(loginFormData: LoginForm) {
     try {
-      const newAccount = await authStoreApi.register(loginFormData)
-      return newAccount
+      const loggedInUser = await authStoreApi.register(loginFormData)
+
+      if (!loggedInUser) {
+        return
+      }
+
+      user.value = loggedInUser
+      loginInfo.value.isLoggedIn = true
+
+      navigateTo('/')
+
+      return loggedInUser
     }
     catch (error) {
       loginInfo.value.registerAccountFailed = true

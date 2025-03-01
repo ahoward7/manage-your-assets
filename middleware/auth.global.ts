@@ -1,11 +1,15 @@
 export default defineNuxtRouteMiddleware((to) => {
   const { user } = useUserSession()
-  const authStore = useAuthStore()
+  const { user: storeUser, loginInfo } = storeToRefs(useAuthStore())
+
+  if (storeUser.value.email) {
+    return
+  }
 
   const sessionUser = user.value as User
 
   if (!sessionUser) {
-    authStore.loginInfo.isLoggedIn = false
+    loginInfo.value.isLoggedIn = false
 
     if (to.path !== '/login') {
       return navigateTo('/login')
@@ -14,10 +18,10 @@ export default defineNuxtRouteMiddleware((to) => {
     return
   }
 
-  authStore.loginInfo.isLoggedIn = true
+  loginInfo.value.isLoggedIn = true
 
-  if (!authStore.user.email) {
-    authStore.user = sessionUser
+  if (!storeUser.value.email) {
+    storeUser.value = sessionUser
   }
 
   if (to.path === '/login') {
