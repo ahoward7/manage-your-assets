@@ -13,30 +13,11 @@
 </template>
 
 <script setup lang="ts">
-import type { AuthCodeFlowErrorResponse, AuthCodeFlowSuccessResponse } from 'vue3-google-signin'
-import { useTokenClient } from 'vue3-google-signin'
-
-const { isReady, login } = useTokenClient({
-  onSuccess: handleLoginSuccess,
-  onError: handleLoginError,
-})
-
+const { openInPopup } = useUserSession()
 const authStore = useAuthStore()
 
 async function loginIfReady() {
-  if (!isReady.value) {
-    return
-  }
-
-  login()
-}
-
-function handleLoginSuccess(response: AuthCodeFlowSuccessResponse) {
-  authStore.googleLogin(response)
-}
-
-function handleLoginError(response: AuthCodeFlowErrorResponse) {
-  console.error('Google login failed: ', response)
+  openInPopup('/auth/google')
 }
 
 function myaLogin(loginInfo: LoginForm) {
