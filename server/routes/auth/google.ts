@@ -1,10 +1,31 @@
-import type { H3Event } from 'h3'
+import type { User } from '~/interfaces/auth'
 
-export default defineEventHandler(async (_event: H3Event): Promise<any> => {
-  const headers = getHeaders(_event)
-  const Authorization = headers.authorization || headers.Authorization || ''
+export default defineOAuthGoogleEventHandler({
+  async onSuccess(event, { user, tokens }) {
+    try {
+      const publicConfig = useRuntimeConfig().public
 
-  const publicConfig = useRuntimeConfig().public
-  const googleLoginInfo = await readBody(_event)
-  return await $fetch(`${publicConfig.baseUrl}/auth/google`, { method: 'POST', body: googleLoginInfo, headers: { Authorization } })
+      const backendUser = await $fetch<User>(`${publicConfig.baseUrl}/auth/google`, {
+        method: 'POST',
+        body: JSON.stringify({ user, tokens }),
+      })
+
+      const sessionUser = {
+        id: backendUser._id,
+        user: backendUser,
+        secure: user.secure,
+      }
+
+      await setUserSession(event, sessionUser, tokens)
+      return sendRedirect(event, '/')
+    }
+    catch (error: any) {
+      console.error('Google Account Error:', error)
+      return sendRedirect(event, '/login')
+    }
+  },
+  async onError(event, error) {
+    console.error('Google Session Storage Failure:', error)
+    return sendRedirect(event, '/login')
+  },
 })

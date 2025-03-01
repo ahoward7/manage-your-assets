@@ -1,49 +1,35 @@
 <template>
   <div class="flex justify-center items-center">
     <div class="w-[360px] bg-white pt-4 pb-6 px-6 rounded-xl shadow-md mb-40">
-      <AuthLogin v-if="authStore.mode === 'login'" @google-login="loginIfReady" @login="myaLogin" />
-      <AuthCreateAccount v-if="authStore.mode === 'register'" @google-login="loginIfReady" @register="register" />
+      <AuthLogin v-if="authStore.mode === 'login'" @google-login="googleLogin" @login="myaLogin" />
+      <AuthCreateAccount v-if="authStore.mode === 'register'" @google-login="googleLogin" @register="register" />
       <!-- <AuthForceGoogleLogin
         v-if="authStore.mode === 'google'"
         @google-login-success="verifyEmail"
         @google-login-error="handleLoginError"
       /> -->
+      {{ user }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { AuthCodeFlowErrorResponse, AuthCodeFlowSuccessResponse } from 'vue3-google-signin'
-import { useTokenClient } from 'vue3-google-signin'
-
-const { isReady, login } = useTokenClient({
-  onSuccess: handleLoginSuccess,
-  onError: handleLoginError,
-})
-
+const { openInPopup, user } = useUserSession()
 const authStore = useAuthStore()
 
-async function loginIfReady() {
-  if (!isReady.value) {
-    return
-  }
-
-  login()
+async function googleLogin() {
+  openInPopup('/auth/google')
 }
 
-function handleLoginSuccess(response: AuthCodeFlowSuccessResponse) {
-  authStore.googleLogin(response)
+async function myaLogin(loginInfo: LoginForm) {
+  await authStore.login(loginInfo)
 }
 
-function handleLoginError(response: AuthCodeFlowErrorResponse) {
-  console.error('Google login failed: ', response)
+async function register(loginInfo: LoginForm) {
+  await authStore.register(loginInfo)
 }
 
-function myaLogin(loginInfo: LoginForm) {
-  authStore.login(loginInfo)
-}
-
-function register(loginInfo: LoginForm) {
-  authStore.register(loginInfo)
-}
+watch(user, () => {
+  navigateTo('/')
+})
 </script>

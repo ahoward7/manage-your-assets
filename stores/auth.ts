@@ -1,5 +1,4 @@
 import type { FetchError } from 'ofetch'
-import type { AuthCodeFlowSuccessResponse } from 'vue3-google-signin'
 import { defineStore } from 'pinia'
 
 // Initial state
@@ -57,31 +56,6 @@ export const useAuthStore = defineStore('auth', () => {
   })
 
   // Login
-  async function googleLogin(response: AuthCodeFlowSuccessResponse) {
-    try {
-      const loggedInUser = await authStoreApi.googleLogin(response)
-
-      if (!loggedInUser) {
-        return
-      }
-
-      user.value = loggedInUser
-      loginInfo.value.isLoggedIn = true
-      return loggedInUser
-    }
-    catch (error) {
-      const fetchError = error as FetchError<any>
-
-      switch (fetchError.response?.status) {
-        case 401:
-          loginInfo.value.unauthorizedGoogleAccount = true
-          break
-        default:
-          console.error('Google Login Failed: Could not communicate with API', error)
-      }
-    }
-  }
-
   async function login(loginFormData: LoginForm) {
     try {
       const loggedInUser = await authStoreApi.login(loginFormData)
@@ -92,6 +66,9 @@ export const useAuthStore = defineStore('auth', () => {
 
       user.value = loggedInUser
       loginInfo.value.isLoggedIn = true
+
+      navigateTo('/')
+
       return loggedInUser
     }
     catch (error: any) {
@@ -113,14 +90,20 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  async function loginWithToken(token: string) {
-    console.log('Logging in with token', token)
-  }
-
   async function register(loginFormData: LoginForm) {
     try {
-      const newAccount = await authStoreApi.register(loginFormData)
-      return newAccount
+      const loggedInUser = await authStoreApi.register(loginFormData)
+
+      if (!loggedInUser) {
+        return
+      }
+
+      user.value = loggedInUser
+      loginInfo.value.isLoggedIn = true
+
+      navigateTo('/')
+
+      return loggedInUser
     }
     catch (error) {
       loginInfo.value.registerAccountFailed = true
@@ -156,10 +139,8 @@ export const useAuthStore = defineStore('auth', () => {
     loginForm,
     loginInfo,
     mode,
-    googleLogin,
     login,
     register,
-    loginWithToken,
     reset,
   }
 })

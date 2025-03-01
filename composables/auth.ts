@@ -1,5 +1,3 @@
-import type { AuthCodeFlowSuccessResponse } from 'vue3-google-signin'
-
 class ModelApi<T extends MongoModel> {
   constructor(private endpoint: ModelEndpoint) {}
 
@@ -33,16 +31,6 @@ class ModelApi<T extends MongoModel> {
 }
 
 class AuthApi {
-  async googleLogin(googleResponse: AuthCodeFlowSuccessResponse): Promise<User> {
-    const { access_token } = googleResponse
-    return await $fetch('/auth/google', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    }) as User
-  }
-
   async login(loginInfo: LoginForm): Promise<User> {
     const { email, password } = loginInfo
 

@@ -1,8 +1,12 @@
 import type { H3Event } from 'h3'
 
-export default defineEventHandler(async (_event: H3Event): Promise<any> => {
+export default defineEventHandler(async (event: H3Event): Promise<any> => {
   const publicConfig = useRuntimeConfig().public
-  const loginInfo = await readBody(_event)
+  const loginInfo = await readBody(event)
 
-  return await $fetch(`${publicConfig.baseUrl}/auth/register`, { method: 'POST', body: loginInfo })
+  const backendUser = await $fetch(`${publicConfig.baseUrl}/auth/register`, { method: 'POST', body: loginInfo })
+
+  await setUserSession(event, { user: backendUser })
+
+  return backendUser
 })

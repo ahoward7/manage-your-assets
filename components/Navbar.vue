@@ -18,6 +18,7 @@
 </template>
 
 <script setup lang="ts">
+const { clear } = useUserSession()
 const authStore = useAuthStore()
 
 const profileOptions: SelectOption[] = [
@@ -31,7 +32,8 @@ const profileOptions: SelectOption[] = [
   },
 ]
 
-function logout() {
+async function logout() {
+  await clear()
   authStore.reset('/login')
 }
 

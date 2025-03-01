@@ -1,14 +1,16 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
-  modules: ['nuxt-vue3-google-signin', '@nuxt/eslint', '@nuxtjs/tailwindcss', '@pinia/nuxt'],
+  modules: [
+    '@nuxt/eslint',
+    '@nuxtjs/tailwindcss',
+    '@pinia/nuxt',
+    'nuxt-auth-utils',
+  ],
   runtimeConfig: {
     public: {
-      baseUrl: process.env.BASE_URL || 'http://localhost:3000',
+      baseUrl: process.env.BASE_URL || 'http://localhost:8000',
     },
-  },
-  googleSignIn: {
-    clientId: process.env.GOOGLE_CLIENT_ID || '',
   },
   eslint: {
     config: {

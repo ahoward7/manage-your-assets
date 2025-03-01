@@ -1,11 +1,30 @@
-import nuxtStorage from 'nuxt-storage'
+export default defineNuxtRouteMiddleware((to) => {
+  const { user } = useUserSession()
+  const { user: storeUser, loginInfo } = storeToRefs(useAuthStore())
 
-export default defineNuxtRouteMiddleware(() => {
-  const authStore = useAuthStore()
+  if (storeUser.value.email) {
+    return
+  }
 
-  // const userFromLocalStorage = nuxtStorage.localStorage.getData('mya-auth-account')
+  const sessionUser = user.value as User
 
-  // if (userFromLocalStorage) {
-  //   authStore.loginWithToken(userFromLocalStorage)
-  // }
+  if (!sessionUser) {
+    loginInfo.value.isLoggedIn = false
+
+    if (to.path !== '/login') {
+      return navigateTo('/login')
+    }
+
+    return
+  }
+
+  loginInfo.value.isLoggedIn = true
+
+  if (!storeUser.value.email) {
+    storeUser.value = sessionUser
+  }
+
+  if (to.path === '/login') {
+    return navigateTo('/')
+  }
 })
