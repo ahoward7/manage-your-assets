@@ -8,27 +8,28 @@
         @google-login-success="verifyEmail"
         @google-login-error="handleLoginError"
       /> -->
+      {{ user }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const { openInPopup, session } = useUserSession()
+const { openInPopup, user } = useUserSession()
 const authStore = useAuthStore()
 
 async function googleLogin() {
   openInPopup('/auth/google')
 }
 
-function myaLogin(loginInfo: LoginForm) {
-  authStore.login(loginInfo)
+async function myaLogin(loginInfo: LoginForm) {
+  await authStore.login(loginInfo)
 }
 
-function register(loginInfo: LoginForm) {
-  authStore.register(loginInfo)
+async function register(loginInfo: LoginForm) {
+  await authStore.register(loginInfo)
 }
 
-watch(session, () => {
+watch(user, () => {
   navigateTo('/')
 })
 </script>

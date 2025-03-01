@@ -5,10 +5,10 @@ export default defineOAuthGoogleEventHandler({
     try {
       const publicConfig = useRuntimeConfig().public
 
-      const backendUser = await $fetch(`${publicConfig.baseUrl}/auth/google`, {
+      const backendUser = await $fetch<User>(`${publicConfig.baseUrl}/auth/google`, {
         method: 'POST',
         body: JSON.stringify({ user, tokens }),
-      }) as User
+      })
 
       const sessionUser = {
         id: backendUser._id,
