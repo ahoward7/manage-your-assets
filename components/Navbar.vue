@@ -5,7 +5,7 @@
     </NuxtLink>
     <div>
       <div v-if="authStore.loginInfo.isLoggedIn" class="flex items-center gap-2">
-        <span class="text-sm">Logged in as:</span>
+        <span class="text-sm italic">Logged in as:</span>
         <MyaSelect :label="authStore.user.firstName" :options="profileOptions" @select="selectOption" />
       </div>
       <NuxtLink v-else to="/login" class="flex gap-2">

@@ -1,5 +1,5 @@
 <template>
-  <div class="relative select-none">
+  <div ref="selectRef" class="relative select-none">
     <div class="flex items-center justify-center bg-blue-500 text-white font-bold outline-none rounded-md pr-3 pl-1 py-1 cursor-pointer" @click="expanded = !expanded">
       <Icon icon="radix-icons:caret-down" class="w-6 h-6" />
       <span>{{ label }}</span>
@@ -10,7 +10,7 @@
         :key="option.option"
         value="Logout"
         class="relative group flex items-center text-sm text-nowrap font-semibold border-blue-500 hover:bg-blue-500 hover:text-white select-none outline-none px-2 py-1 cursor-pointer rounded-sm"
-        @click="emit('select', option.option)"
+        @click="selectOption(option)"
       >
         {{ option.label }}
       </div>
@@ -33,5 +33,16 @@ defineProps({
 
 const emit = defineEmits(['select'])
 
+const selectRef = ref<HTMLElement | null>(null)
+
 const expanded = ref(false)
+
+onClickOutside(selectRef, () => {
+  expanded.value = false
+})
+
+function selectOption(option: SelectOption) {
+  emit('select', option)
+  expanded.value = false
+}
 </script>
