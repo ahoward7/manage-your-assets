@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
     'nuxt-auth-utils',
+    '@vueuse/nuxt',
   ],
   runtimeConfig: {
     public: {
