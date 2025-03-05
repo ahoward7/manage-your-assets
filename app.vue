@@ -1,16 +1,16 @@
 <template>
   <div class="w-screen h-screen bg-gray-50">
     <Navbar />
-    <NuxtPage style="height: calc(100vh - 48px)" />
+    <div class="flex justify-center p-4">
+      <NuxtPage class="nuxt-page" style="height: calc(100vh - 48px)" />
+    </div>
   </div>
 </template>
 
-<style>
-#google-button > div > div > div {
-  width: 312px;
-}
-
-#google-button {
-  pointer-events: none;
+<style scoped>
+.nuxt-page {
+  height: calc(100vh - 48px);
+  max-width: 1200px;
+  width: 100%;
 }
 </style>
