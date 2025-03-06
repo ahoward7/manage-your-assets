@@ -9,7 +9,7 @@
           {{ verb2 }}
         </div>
       </div>
-      <span class="mr-16">Your Assets</span>
+      <span class="mr-16 whitespace-nowrap">Your Assets</span>
     </div>
   </div>
 </template>
