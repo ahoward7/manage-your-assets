@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex justify-end gap-4 text-7xl font-bold">
+    <div class="flex justify-center gap-4 text-7xl font-bold">
       <div ref="boxRef" class="text-right box w-[20.5rem] h-[5.75rem] text-blue-500">
         <div class="side-one">
           {{ verb1 }}

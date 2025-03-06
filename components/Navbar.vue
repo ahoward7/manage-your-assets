@@ -41,13 +41,15 @@ function editProfile() {
   console.log('Edit Profile')
 }
 
-function selectOption(option: 'logout' | 'edit') {
-  switch (option) {
+function selectOption(option: SelectOption) {
+  switch (option.option) {
     case 'logout':
       logout()
       break
     case 'edit':
       editProfile()
+      break
+    default:
       break
   }
 }
