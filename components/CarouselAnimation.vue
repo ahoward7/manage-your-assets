@@ -1,15 +1,15 @@
 <template>
   <div>
-    <div class="flex justify-center gap-4 text-7xl font-bold">
-      <div ref="boxRef" class="box w-[22rem] h-[5.75rem]">
-        <div class="bg-blue-500 side-one">
+    <div class="flex justify-end gap-4 text-7xl font-bold">
+      <div ref="boxRef" class="text-right box w-[20.5rem] h-[5.75rem] text-blue-500">
+        <div class="side-one">
           {{ verb1 }}
         </div>
-        <div class="bg-blue-500 side-two">
+        <div class="side-two">
           {{ verb2 }}
         </div>
       </div>
-      <span>Your Assets</span>
+      <span class="mr-16">Your Assets</span>
     </div>
   </div>
 </template>
@@ -74,20 +74,16 @@ body {
   transition: all 0.4s ease-in;
   transform-style: preserve-3d;
   position: relative;
-  cursor: pointer;
   transform: rotateX(0deg);
 }
 
 .box div {
   position: absolute;
+  right: 0;
   backface-visibility: hidden;
   width: 100%;
   height: 100%;
-  border-radius: 10px;
   background-repeat: no-repeat;
-  box-shadow: inset 0 0 45px rgba(255,255,255,0.3), 0 12px 20px -10px rgba(0,0,0,0.4);
-  color: #FFF;
-  text-align: center;
   text-shadow: 0 1px rgba(0,0,0,0.3);
 }
 
