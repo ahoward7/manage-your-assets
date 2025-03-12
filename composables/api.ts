@@ -1,5 +1,5 @@
-class ModelApi<T extends MongoModel> {
-  constructor(private endpoint: ModelEndpoint) {}
+class BaseApi<T extends Record<string, any>> {
+  constructor(public endpoint: string) {}
 
   async get(query: { [key: string]: string }): Promise<T> {
     return await $fetch(`/${this.endpoint}`, {
@@ -57,7 +57,14 @@ class AuthApi {
 
 export const useAuthApi = () => new AuthApi()
 
-export const userApi = new ModelApi<User>('user')
-export const accountApi = new ModelApi<Account>('account')
-export const profileApi = new ModelApi<Profile>('profile')
+class AssetApi<T extends Record<string, any>> extends BaseApi<T> {
+  async import(body: T): Promise<T> {
+    return await $fetch(`/${this.endpoint}/import`, {
+      method: 'POST',
+      body,
+    }) as T
+  }
+}
+
+export const assetApi = new AssetApi<Record<string, any>>('asset')
 export const authApi = new AuthApi()
