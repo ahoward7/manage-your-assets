@@ -20,7 +20,7 @@ function importAssets() {
 
     const formData = new FormData()
     for (const file of files) {
-      formData.append('files', file)
+      formData.append(file.name, file)
     }
 
     try {
