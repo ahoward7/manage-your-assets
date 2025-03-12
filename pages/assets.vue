@@ -8,30 +8,36 @@
 </template>
 
 <script setup lang="ts">
+const authStore = useAuthStore()
+
 function importAssets() {
   const fileInput = document.createElement('input')
   fileInput.type = 'file'
   fileInput.multiple = true
   fileInput.accept = '.xlsx,.xls,.csv'
+
   fileInput.onchange = async (event) => {
     const files = (event.target as HTMLInputElement).files
     if (!files)
       return
 
     const formData = new FormData()
-    for (const file of files) {
-      formData.append(file.name, file)
-    }
+
+    formData.append('schemaName', 'Asset')
+    formData.append('user', JSON.stringify(authStore.user))
+
+    Array.from(files).forEach((file) => {
+      formData.append('files', file)
+    })
 
     try {
-      const assets = await assetApi.import(formData)
-      console.log(assets)
+      await assetApi.import(formData)
     }
     catch (error) {
       console.error('Error uploading assets:', error)
     }
   }
+
   fileInput.click()
-  fileInput.remove()
 }
 </script>
