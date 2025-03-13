@@ -1,8 +1,8 @@
 <template>
   <div ref="selectRef" class="relative select-none">
-    <div class="flex items-center justify-center bg-blue-500 text-white font-bold outline-none rounded-md pr-3 pl-1 py-1 cursor-pointer" @click="expanded = !expanded">
+    <div class="flex items-center bg-blue-500 text-white font-bold outline-none rounded-md pr-3 pl-1 py-1 cursor-pointer" @click="expanded = !expanded">
       <Icon icon="radix-icons:caret-down" class="w-6 h-6" />
-      <span>{{ label }}</span>
+      <span class="grow flex justify-center">{{ label }}</span>
     </div>
     <div class="absolute right-0 flex flex-col bg-white px-2 py-2 rounded-md shadow-md border duration-300" :class="expanded ? 'h-[72px] opacity-1 top-[38px] z-10' : 'top-6 h-0 opacity-0 z-[-1]'">
       <div
