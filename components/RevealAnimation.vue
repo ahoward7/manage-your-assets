@@ -4,8 +4,8 @@
       <div class="relative z-0 w-[940px] h-60 flex items-center text-[220px] text-blue-500">
         <span class="verb">{{ verb }}</span>
         <div class="absolute z-10 w-[960px] left-[-20px] h-60 flex">
-          <div ref="revealer" class="w-0 duration-300 ease-linear" />
-          <div v-if="cursorOn" class="cursor w-2 h-full rounded-full bg-blue-500 duration-300" />
+          <div ref="revealer" class="w-0 duration-500 ease-linear" />
+          <div v-if="cursorOn" class="cursor w-2 h-full rounded-full bg-blue-300" />
           <div class="grow bg-slate-50" />
         </div>
       </div>
