@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <div class="flex justify-center gap-4 text-7xl font-bold">
-      <div ref="boxRef" class="text-right box w-[20.5rem] h-[5.75rem] text-blue-500">
+  <div class="flex justify-center">
+    <div class="w-full flex flex-col gap-12 items-start">
+      <div ref="boxRef" class="w-full flex items-center text-[220px] box h-32 text-blue-500">
         <div class="side-one">
           {{ verb1 }}
         </div>
@@ -9,7 +9,7 @@
           {{ verb2 }}
         </div>
       </div>
-      <span class="mr-16 whitespace-nowrap">Your Assets</span>
+      <span class="whitespace-nowrap text-8xl ml-4">Your Assets</span>
     </div>
   </div>
 </template>
@@ -54,8 +54,7 @@ function rotateBox() {
 
 onMounted(() => {
   rotateBox()
-
-  rotateInterval = setInterval(rotateBox, 800)
+  rotateInterval = setInterval(rotateBox, 1200)
 })
 
 onUnmounted(() => {
@@ -79,10 +78,7 @@ body {
 
 .box div {
   position: absolute;
-  right: 0;
   backface-visibility: hidden;
-  width: 100%;
-  height: 100%;
   background-repeat: no-repeat;
   text-shadow: 0 1px rgba(0,0,0,0.3);
 }
