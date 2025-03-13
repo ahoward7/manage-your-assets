@@ -1,15 +1,15 @@
 <template>
   <div ref="selectRef" class="relative select-none">
-    <div class="flex items-center bg-blue-500 text-white font-bold outline-none rounded-md pr-3 pl-1 py-1 cursor-pointer" @click="expanded = !expanded">
+    <div class="relative z-10 flex items-center bg-blue-500 text-white font-bold outline-none rounded-md pr-3 pl-1 py-1 cursor-pointer" @click="expanded = !expanded">
       <Icon icon="radix-icons:caret-down" class="w-6 h-6" />
       <span class="grow flex justify-center">{{ label }}</span>
     </div>
-    <div class="absolute right-0 flex flex-col bg-white px-2 py-2 rounded-md shadow-md border duration-300" :class="expanded ? 'h-[72px] opacity-1 top-[38px] z-10' : 'top-6 h-0 opacity-0 z-[-1]'">
+    <div class="interpolate min-w-28 absolute right-0 flex flex-col bg-white px-2 py-2 rounded-md shadow-md border duration-300 ease-[cubic-bezier(.35,1.3,.68,1.11)] overflow-y-hidden" :class="expanded ? 'h-fit w-full z-10 top-[36px]' : 'h-0 top-0 z-[-1]'">
       <div
         v-for="option in options"
         :key="option.option"
         value="Logout"
-        class="relative group flex items-center text-sm text-nowrap font-semibold border-blue-500 hover:bg-blue-500 hover:text-white select-none outline-none px-2 py-1 cursor-pointer rounded-sm"
+        class="relative group flex items-center text-sm text-nowrap font-semibold hover:text-blue-500 select-none outline-none px-2 py-1 cursor-pointer rounded-sm"
         @click="selectOption(option)"
       >
         {{ option.label }}
@@ -46,3 +46,9 @@ function selectOption(option: SelectOption) {
   expanded.value = false
 }
 </script>
+
+<style scoped>
+.interpolate {
+  interpolate-size: allow-keywords;
+}
+</style>
