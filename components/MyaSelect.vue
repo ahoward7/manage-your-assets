@@ -4,12 +4,12 @@
       <Icon icon="radix-icons:caret-down" class="w-6 h-6" />
       <span class="grow flex justify-center">{{ label }}</span>
     </div>
-    <div class="interpolate min-w-28 absolute right-0 flex flex-col bg-white px-2 py-2 rounded-md shadow-md border duration-300 ease-[cubic-bezier(.35,1.3,.68,1.11)] overflow-y-hidden" :class="expanded ? 'h-fit w-full z-10 top-[36px]' : 'h-0 top-0 z-[-1]'">
+    <div class="interpolate-keywords min-w-28 absolute right-0 flex flex-col gap-2 bg-white px-2 py-2 rounded-md shadow-md border duration-300 ease-[cubic-bezier(.3,1.2,.68,1.11)] overflow-y-hidden" :class="expanded ? 'h-fit z-10 top-[36px]' : 'h-0 top-0 z-[-1]'">
       <div
         v-for="option in options"
         :key="option.option"
         value="Logout"
-        class="relative group flex items-center text-sm text-nowrap font-semibold hover:text-blue-500 select-none outline-none px-2 py-1 cursor-pointer rounded-sm"
+        class="relative group flex flex-col text-sm text-nowrap font-semibold hover:text-blue-500 py-0.5 underline-animation duration-[300ms] select-none outline-none px-1 cursor-pointer rounded-sm"
         @click="selectOption(option)"
       >
         {{ option.label }}
@@ -48,7 +48,5 @@ function selectOption(option: SelectOption) {
 </script>
 
 <style scoped>
-.interpolate {
-  interpolate-size: allow-keywords;
-}
+
 </style>
