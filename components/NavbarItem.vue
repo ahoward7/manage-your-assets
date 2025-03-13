@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink :to="to" class="relative px-1 hover:text-blue-500 underline-animation duration-300 font-semibold">
+  <NuxtLink :to="to" class="relative px-1 hover:text-blue-500 underline-animation duration-300">
     <slot />
   </NuxtLink>
 </template>

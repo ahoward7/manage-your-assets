@@ -9,7 +9,7 @@
         v-for="option in options"
         :key="option.option"
         value="Logout"
-        class="relative group flex flex-col text-sm text-nowrap font-semibold hover:text-blue-500 py-0.5 underline-animation duration-[300ms] select-none outline-none px-1 cursor-pointer rounded-sm"
+        class="relative group flex flex-col text-sm text-nowrap hover:text-blue-500 py-0.5 underline-animation duration-[300ms] select-none outline-none px-1 cursor-pointer rounded-sm"
         @click="selectOption(option)"
       >
         {{ option.label }}

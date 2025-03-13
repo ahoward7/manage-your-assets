@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'nuxt-auth-utils',
     '@vueuse/nuxt',
+    '@nuxt/fonts',
   ],
   runtimeConfig: {
     public: {
@@ -28,5 +29,13 @@ export default defineNuxtConfig({
   },
   pinia: {
     storesDirs: ['./stores/**'],
+  },
+  fonts: {
+    families: [
+      {
+        name: 'Nunito',
+        provider: 'google',
+      },
+    ],
   },
 })
