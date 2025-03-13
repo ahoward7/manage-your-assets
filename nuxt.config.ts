@@ -18,6 +18,9 @@ export default defineNuxtConfig({
       standalone: false,
     },
   },
+  css: [
+    '@/assets/css/main.css',
+  ],
   imports: {
     dirs: [
       'interfaces',

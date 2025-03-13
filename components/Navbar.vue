@@ -1,12 +1,23 @@
 <template>
   <nav class="relative flex justify-between items-center px-4 py-2 shadow-md bg-gray-50">
-    <NuxtLink to="/" class="text-xl font-bold text-blue-500 cursor-pointer">
+    <NuxtLink to="/" class="w-80 text-xl font-bold text-blue-500 cursor-pointer">
       Manage Your Assets
     </NuxtLink>
-    <div>
+    <div class="flex items-center gap-8">
+      <NavbarItem to="/dashboard">
+        Dashboard
+      </NavbarItem>
+      <NavbarItem to="/transactions">
+        Transactions
+      </NavbarItem>
+      <NavbarItem to="/assets">
+        Assets
+      </NavbarItem>
+    </div>
+    <div class="w-80 flex justify-end">
       <div v-if="authStore.loginInfo.isLoggedIn" class="flex items-center gap-2">
         <span class="text-sm italic">Logged in as:</span>
-        <MyaSelect :label="authStore.user.firstName" :options="profileOptions" @select="selectOption" />
+        <MyaSelect class="min-w-28" :label="authStore.user.firstName" :options="profileOptions" @select="selectOption" />
       </div>
       <NuxtLink v-else to="/login" class="flex gap-2">
         <ButtonPrimary>

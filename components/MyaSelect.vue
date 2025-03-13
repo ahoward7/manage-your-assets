@@ -1,15 +1,15 @@
 <template>
   <div ref="selectRef" class="relative select-none">
-    <div class="flex items-center justify-center bg-blue-500 text-white font-bold outline-none rounded-md pr-3 pl-1 py-1 cursor-pointer" @click="expanded = !expanded">
+    <div class="relative z-10 flex items-center bg-blue-500 text-white font-bold outline-none rounded-md pr-3 pl-1 py-1 cursor-pointer" @click="expanded = !expanded">
       <Icon icon="radix-icons:caret-down" class="w-6 h-6" />
-      <span>{{ label }}</span>
+      <span class="grow flex justify-center">{{ label }}</span>
     </div>
-    <div class="absolute right-0 flex flex-col bg-white px-2 py-2 rounded-md shadow-md border duration-300" :class="expanded ? 'h-[72px] opacity-1 top-[38px] z-10' : 'top-6 h-0 opacity-0 z-[-1]'">
+    <div class="interpolate-keywords min-w-28 absolute right-0 flex flex-col gap-2 bg-white px-2 py-2 rounded-md shadow-md border duration-300 ease-[cubic-bezier(.3,1.2,.68,1.11)] overflow-y-hidden" :class="expanded ? 'h-fit z-10 top-[36px]' : 'h-0 top-0 z-[-1]'">
       <div
         v-for="option in options"
         :key="option.option"
         value="Logout"
-        class="relative group flex items-center text-sm text-nowrap font-semibold border-blue-500 hover:bg-blue-500 hover:text-white select-none outline-none px-2 py-1 cursor-pointer rounded-sm"
+        class="relative group flex flex-col text-sm text-nowrap font-semibold hover:text-blue-500 py-0.5 underline-animation duration-[300ms] select-none outline-none px-1 cursor-pointer rounded-sm"
         @click="selectOption(option)"
       >
         {{ option.label }}
@@ -46,3 +46,7 @@ function selectOption(option: SelectOption) {
   expanded.value = false
 }
 </script>
+
+<style scoped>
+
+</style>
