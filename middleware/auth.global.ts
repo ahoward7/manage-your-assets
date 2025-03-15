@@ -18,16 +18,16 @@ export default defineNuxtRouteMiddleware((to) => {
     return
   }
 
-  if (!profile.value.completed) {
-    if (to.path !== '/profile') {
-      return navigateTo('/profile')
-    }
-  }
-
   loginInfo.value.isLoggedIn = true
 
   if (!storeUser.value.email) {
     storeUser.value = sessionUser
+  }
+
+  if (!profile.value.completed) {
+    if (to.path !== '/profile') {
+      return navigateTo('/profile')
+    }
   }
 
   if (to.path === '/login') {
