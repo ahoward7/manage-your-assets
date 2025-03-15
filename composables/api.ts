@@ -64,6 +64,15 @@ class AuthApi {
     }) as User
   }
 
+  async getProfile(userId: string): Promise<Profile> {
+    return await $fetch('/auth/profile', {
+      method: 'GET',
+      query: {
+        user: userId,
+      },
+    }) as Profile
+  }
+
   async updateProfile(profile: Profile): Promise<Profile> {
     return await $fetch('/auth/profile', {
       method: 'PUT',

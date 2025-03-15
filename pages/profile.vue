@@ -7,16 +7,16 @@
         </div>
         <div class="flex flex-col gap-4">
           <div class="flex items-center gap-4">
-            <label class="w-20 flex justify-end">Role:</label>
+            <label class="w-[5.25rem] shrink-0 flex justify-end">Role:</label>
             <MyaSelect v-model="profileForm.role" class="grow" label="Role" :options="roleOptions" />
           </div>
           <div class="flex items-center gap-4">
-            <label class="w-20 flex justify-end">Supervisor:</label>
-            <MyaUserSelect v-model="profileForm.supervisor" />
+            <label class="w-[5.25rem] shrink-0 flex justify-end">Supervisor:</label>
+            <MyaUserSelect v-model="profileForm.supervisor" class="grow" />
           </div>
           <div class="flex gap-4">
-            <label class="w-24 flex justify-end mt-1">Employees:</label>
-            <div class="w-full flex flex-col gap-2">
+            <label class="w-[5.25rem] shrink-0 flex justify-end mt-1">Employees:</label>
+            <div class="grow flex flex-col gap-2">
               <div v-if="profileForm.employees.length > 0" class="flex flex-col gap-2 bg-slate-50 px-2 py-1 border border-slate-300 rounded-md">
                 <div v-for="employee in profileForm.employees" :key="employee._id">
                   {{ `${employee.lastName}, ${employee.firstName}` }}
