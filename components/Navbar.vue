@@ -17,7 +17,7 @@
     <div class="w-80 flex justify-end">
       <div v-if="authStore.loginInfo.isLoggedIn" class="flex items-center gap-2">
         <span class="text-sm italic">Logged in as:</span>
-        <MyaSelect class="min-w-28" :label="authStore.user.firstName" :options="profileOptions" @select="selectOption" />
+        <MyaDropdownMenu class="min-w-28" :label="authStore.user.firstName" :options="profileOptions" @select="selectOption" />
       </div>
       <NuxtLink v-else to="/login" class="flex gap-2">
         <ButtonPrimary>
@@ -49,7 +49,7 @@ async function logout() {
 }
 
 function editProfile() {
-  console.log('Edit Profile')
+  navigateTo('/profile')
 }
 
 function selectOption(option: SelectOption) {

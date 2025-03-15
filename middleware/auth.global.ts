@@ -1,4 +1,4 @@
-export default defineNuxtRouteMiddleware((to) => {
+export default defineNuxtRouteMiddleware(async (to) => {
   const { user } = useUserSession()
   const { user: storeUser, loginInfo } = storeToRefs(useAuthStore())
 
@@ -18,10 +18,18 @@ export default defineNuxtRouteMiddleware((to) => {
     return
   }
 
+  const { data: userProfile } = await authApi.useGetProfile(sessionUser._id)
+
   loginInfo.value.isLoggedIn = true
 
   if (!storeUser.value.email) {
     storeUser.value = sessionUser
+  }
+
+  if (!userProfile.value.completed) {
+    if (to.path !== '/profile') {
+      return navigateTo('/profile')
+    }
   }
 
   if (to.path === '/login') {

@@ -16,7 +16,8 @@ const initialAccount: BaseAccount = {
   password: '',
 }
 
-const initialProfile: BaseProfile = {
+const initialProfile: Profile = {
+  _id: '-1',
   user: '',
   role: '',
   supervisor: '',
@@ -38,9 +39,9 @@ const initialLoginForm: LoginForm = {
 const authStoreApi = useAuthApi()
 
 export const useAuthStore = defineStore('auth', () => {
-  const user: Ref<BaseUser> = ref({ ...initialUser })
+  const user: Ref<BaseUser | User> = ref({ ...initialUser })
   const account: Ref<BaseAccount> = ref({ ...initialAccount })
-  const profile: Ref<BaseProfile> = ref({ ...initialProfile })
+  const profile: Ref<Profile> = ref({ ...initialProfile })
   const loginForm: Ref<LoginForm> = ref({ ...initialLoginForm })
   const mode: Ref<AuthMode> = ref('login')
 
@@ -65,7 +66,13 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       user.value = loggedInUser
+      profile.value = await authStoreApi.getProfile(loggedInUser._id)
       loginInfo.value.isLoggedIn = true
+
+      if (!profile.value.completed) {
+        navigateTo('/profile')
+        return
+      }
 
       navigateTo('/')
 
@@ -99,15 +106,27 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       user.value = loggedInUser
+      profile.value = await authStoreApi.getProfile(loggedInUser._id)
       loginInfo.value.isLoggedIn = true
 
-      navigateTo('/')
+      navigateTo('/profile')
 
       return loggedInUser
     }
     catch (error) {
       loginInfo.value.registerAccountFailed = true
       console.error('Register Failed: Could not communicate with API', error)
+    }
+  }
+
+  async function updateProfile(profileData: Profile) {
+    try {
+      const newProfile = await authStoreApi.updateProfile(profileData)
+      profile.value = newProfile
+      return newProfile
+    }
+    catch (error) {
+      console.error('Update Profile Failed: Could not communicate with API', error)
     }
   }
 
@@ -141,6 +160,7 @@ export const useAuthStore = defineStore('auth', () => {
     mode,
     login,
     register,
+    updateProfile,
     reset,
   }
 })

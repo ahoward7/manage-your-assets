@@ -1,7 +1,7 @@
 export type AuthMode = 'register' | 'login' | 'google' | 'profile'
 export type ModelEndpoint = 'user' | 'account' | 'profile'
 export type MongoModel = User | Account | Profile
-export type UserRole = 'admin' | 'employee' | 'external' | ''
+export type UserRole = 'admin' | 'supervisor' | 'employee' | 'external' | ''
 export type AccountClient = 'google' | 'mya' | 'merged'
 
 // Base

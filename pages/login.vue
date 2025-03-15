@@ -3,11 +3,6 @@
     <div class="w-[360px] bg-white pt-4 pb-6 px-6 rounded-xl shadow-md mb-40">
       <AuthLogin v-if="authStore.mode === 'login'" @google-login="googleLogin" @login="myaLogin" />
       <AuthCreateAccount v-if="authStore.mode === 'register'" @google-login="googleLogin" @register="register" />
-      <!-- <AuthForceGoogleLogin
-        v-if="authStore.mode === 'google'"
-        @google-login-success="verifyEmail"
-        @google-login-error="handleLoginError"
-      /> -->
       {{ user }}
     </div>
   </div>
