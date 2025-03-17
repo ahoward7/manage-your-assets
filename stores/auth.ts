@@ -66,7 +66,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       user.value = loggedInUser
-      profile.value = await authStoreApi.getProfile(loggedInUser._id)
+      profile.value = await profileApi.get({ user: loggedInUser._id })
       loginInfo.value.isLoggedIn = true
 
       if (!profile.value.completed) {
@@ -106,7 +106,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       user.value = loggedInUser
-      profile.value = await authStoreApi.getProfile(loggedInUser._id)
+      profile.value = await profileApi.get({ user: loggedInUser._id })
       loginInfo.value.isLoggedIn = true
 
       navigateTo('/profile')
@@ -121,7 +121,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function updateProfile(profileData: Profile) {
     try {
-      const newProfile = await authStoreApi.updateProfile(profileData)
+      const newProfile = await profileApi.put(profileData)
       profile.value = newProfile
       return newProfile
     }

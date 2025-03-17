@@ -69,9 +69,9 @@ function saveProfile() {
     user: authUser._id,
     role: profileForm.value.role.option,
     supervisor: profileForm.value.supervisor._id,
-    employees: profileForm.value.employees.map(emp => emp._id),
+    employees: profileForm.value.employees.map((emp: User) => emp._id),
     completed: true,
   }
-  authStore.updateProfile(updatedProfile)
+  profileApi.put(updatedProfile)
 }
 </script>

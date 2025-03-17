@@ -10,3 +10,7 @@ export interface ProfileForm {
   supervisor: User | null
   employees: User[]
 }
+
+export interface Asset {
+  [key: string]: string | Asset | null
+}
