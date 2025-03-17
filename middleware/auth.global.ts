@@ -18,7 +18,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return
   }
 
-  const { data: userProfile } = await authApi.useGetProfile(sessionUser._id)
+  const { data: userProfile } = await profileApi.useGet({ user: sessionUser._id })
 
   loginInfo.value.isLoggedIn = true
 

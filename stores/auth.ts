@@ -2,14 +2,14 @@ import type { FetchError } from 'ofetch'
 import { defineStore } from 'pinia'
 
 // Initial state
-const initialUser: BaseUser = {
+const initialUser: User = {
   email: '',
   firstName: '',
   lastName: '',
   image: '',
 }
 
-const initialAccount: BaseAccount = {
+const initialAccount: Account = {
   user: '',
   client: 'mya',
   email: '',
@@ -17,7 +17,6 @@ const initialAccount: BaseAccount = {
 }
 
 const initialProfile: Profile = {
-  _id: '-1',
   user: '',
   role: '',
   supervisor: '',
@@ -39,8 +38,8 @@ const initialLoginForm: LoginForm = {
 const authStoreApi = useAuthApi()
 
 export const useAuthStore = defineStore('auth', () => {
-  const user: Ref<BaseUser | User> = ref({ ...initialUser })
-  const account: Ref<BaseAccount> = ref({ ...initialAccount })
+  const user: Ref<User> = ref({ ...initialUser })
+  const account: Ref<Account> = ref({ ...initialAccount })
   const profile: Ref<Profile> = ref({ ...initialProfile })
   const loginForm: Ref<LoginForm> = ref({ ...initialLoginForm })
   const mode: Ref<AuthMode> = ref('login')
@@ -66,7 +65,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       user.value = loggedInUser
-      profile.value = await authStoreApi.getProfile(loggedInUser._id)
+      profile.value = await profileApi.get({ user: loggedInUser._id })
       loginInfo.value.isLoggedIn = true
 
       if (!profile.value.completed) {
@@ -106,7 +105,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       user.value = loggedInUser
-      profile.value = await authStoreApi.getProfile(loggedInUser._id)
+      profile.value = await profileApi.get({ user: loggedInUser._id })
       loginInfo.value.isLoggedIn = true
 
       navigateTo('/profile')
@@ -121,7 +120,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function updateProfile(profileData: Profile) {
     try {
-      const newProfile = await authStoreApi.updateProfile(profileData)
+      const newProfile = await profileApi.put(profileData)
       profile.value = newProfile
       return newProfile
     }
