@@ -2,14 +2,16 @@ import type { FetchError } from 'ofetch'
 import { defineStore } from 'pinia'
 
 // Initial state
-const initialUser: BaseUser = {
+const initialUser: User = {
+  _id: '-1',
   email: '',
   firstName: '',
   lastName: '',
   image: '',
 }
 
-const initialAccount: BaseAccount = {
+const initialAccount: Account = {
+  _id: '-1',
   user: '',
   client: 'mya',
   email: '',
@@ -39,8 +41,8 @@ const initialLoginForm: LoginForm = {
 const authStoreApi = useAuthApi()
 
 export const useAuthStore = defineStore('auth', () => {
-  const user: Ref<BaseUser | User> = ref({ ...initialUser })
-  const account: Ref<BaseAccount> = ref({ ...initialAccount })
+  const user: Ref<User> = ref({ ...initialUser })
+  const account: Ref<Account> = ref({ ...initialAccount })
   const profile: Ref<Profile> = ref({ ...initialProfile })
   const loginForm: Ref<LoginForm> = ref({ ...initialLoginForm })
   const mode: Ref<AuthMode> = ref('login')
