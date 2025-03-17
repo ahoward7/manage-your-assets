@@ -3,7 +3,6 @@ import { defineStore } from 'pinia'
 
 // Initial state
 const initialUser: User = {
-  _id: '-1',
   email: '',
   firstName: '',
   lastName: '',
@@ -11,7 +10,6 @@ const initialUser: User = {
 }
 
 const initialAccount: Account = {
-  _id: '-1',
   user: '',
   client: 'mya',
   email: '',
@@ -19,7 +17,6 @@ const initialAccount: Account = {
 }
 
 const initialProfile: Profile = {
-  _id: '-1',
   user: '',
   role: '',
   supervisor: '',

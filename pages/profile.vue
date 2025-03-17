@@ -66,10 +66,10 @@ function saveProfile() {
 
   const updatedProfile: Profile = {
     _id: authStore.profile._id,
-    user: authUser._id,
+    user: authUser._id || '-1',
     role: profileForm.value.role.option,
-    supervisor: profileForm.value.supervisor._id,
-    employees: profileForm.value.employees.map((emp: User) => emp._id),
+    supervisor: profileForm.value.supervisor._id || '-1',
+    employees: profileForm.value.employees.map((emp: User) => emp._id || '-1'),
     completed: true,
   }
   profileApi.put(updatedProfile)
