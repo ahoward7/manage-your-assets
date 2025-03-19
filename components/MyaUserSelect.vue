@@ -84,14 +84,19 @@ watch(userSearch, () => {
 })
 
 async function initializeUsers() {
-  const { data: userResults } = await userApi.useGetMany({ search: '' })
+  try {
+    const userResults = await userApi.getMany({ search: '' })
 
-  if (userResults) {
-    setUsers(userResults.value)
-    return
+    if (userResults) {
+      setUsers(userResults)
+      return
+    }
+
+    users.value = []
   }
-
-  users.value = []
+  catch (error) {
+    console.error(error)
+  }
 }
 
 await initializeUsers()
@@ -100,7 +105,7 @@ await initializeUsers()
 const selectRef = ref<HTMLElement | null>(null)
 const expanded = ref(false)
 
-onClickOutside(selectRef, () => {
+onClickOutside(selectRef as any, () => {
   expanded.value = false
 })
 

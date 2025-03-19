@@ -5,6 +5,9 @@
         <div class="text-2xl font-bold text-blue-500">
           Edit Profile
         </div>
+        <InfoMessage v-if="!profile.completed">
+          Your profile is incomplete. Please fill out the information below before continuing.
+        </InfoMessage>
         <div class="flex flex-col gap-4">
           <div class="flex items-center gap-4">
             <label class="w-[5.25rem] shrink-0 flex justify-end">Role:</label>
@@ -36,12 +39,7 @@
 
 <script setup lang="ts">
 const authStore = useAuthStore()
-
-const profileForm: Ref<ProfileForm> = ref({
-  role: { label: 'Employee', option: 'employee' },
-  supervisor: null,
-  employees: [] as User[],
-})
+const profile = authStore.profile
 
 const roleOptions: { label: string, option: UserRole }[] = [
   { label: 'Admin', option: 'admin' },
@@ -49,6 +47,27 @@ const roleOptions: { label: string, option: UserRole }[] = [
   { label: 'Employee', option: 'employee' },
   { label: 'External', option: 'external' },
 ]
+
+const profileForm: Ref<ProfileForm> = ref({
+  role: roleOptions[2],
+  supervisor: null,
+  employees: [],
+})
+
+try {
+  const role = profile.role || 'employee'
+  const supervisor = await userApi.useGet({ user: profile.supervisor })
+  const employees = await userApi.useGetMany({ users: profile.employees })
+
+  profileForm.value = {
+    role: roleOptions.find(r => r.option === role) || roleOptions[2],
+    supervisor: supervisor.data.value,
+    employees: employees.data.value,
+  }
+}
+catch (error) {
+  console.error(error)
+}
 
 function addEmployee(user: User) {
   if (profileForm.value.employees.some((emp: User) => emp._id === user._id))

@@ -112,10 +112,24 @@ export const useAuthStore = defineStore('auth', () => {
 
       return loggedInUser
     }
-    catch (error) {
-      loginInfo.value.registerAccountFailed = true
-      console.error('Register Failed: Could not communicate with API', error)
+    catch (error: any) {
+      const fetchError = error as FetchError<any>
+
+      switch (fetchError.response?.status) {
+        case 409:
+          loginInfo.value.accountAlreadyExists = true
+          break
+        case 400:
+          loginInfo.value.registerAccountFailed = true
+          break
+        default:
+          console.error('Register Failed: Could not communicate with API', error)
+      }
     }
+  }
+
+  async function setProfile(profileData: Profile) {
+    profile.value = profileData
   }
 
   async function updateProfile(profileData: Profile) {
@@ -159,6 +173,7 @@ export const useAuthStore = defineStore('auth', () => {
     mode,
     login,
     register,
+    setProfile,
     updateProfile,
     reset,
   }

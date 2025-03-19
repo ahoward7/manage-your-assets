@@ -1,6 +1,7 @@
 export default defineNuxtRouteMiddleware(async (to) => {
   const { user } = useUserSession()
-  const { user: storeUser, loginInfo } = storeToRefs(useAuthStore())
+  const authStore = useAuthStore()
+  const { user: storeUser, loginInfo } = storeToRefs(authStore)
 
   if (storeUser.value.email) {
     return
@@ -30,6 +31,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
     if (to.path !== '/edit-profile') {
       return navigateTo('/edit-profile')
     }
+  }
+  else {
+    authStore.setProfile(userProfile.value)
   }
 
   if (to.path === '/login') {
