@@ -69,7 +69,7 @@ export const useAuthStore = defineStore('auth', () => {
       loginInfo.value.isLoggedIn = true
 
       if (!profile.value.completed) {
-        navigateTo('/profile')
+        navigateTo('/edit-profile')
         return
       }
 
@@ -108,7 +108,7 @@ export const useAuthStore = defineStore('auth', () => {
       profile.value = await profileApi.get({ user: loggedInUser._id })
       loginInfo.value.isLoggedIn = true
 
-      navigateTo('/profile')
+      navigateTo('/edit-profile')
 
       return loggedInUser
     }

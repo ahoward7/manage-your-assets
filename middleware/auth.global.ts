@@ -27,8 +27,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
   }
 
   if (!userProfile.value.completed) {
-    if (to.path !== '/profile') {
-      return navigateTo('/profile')
+    if (to.path !== '/edit-profile') {
+      return navigateTo('/edit-profile')
     }
   }
 

@@ -49,7 +49,7 @@ async function logout() {
 }
 
 function editProfile() {
-  navigateTo('/profile')
+  navigateTo('/edit-profile')
 }
 
 function selectOption(option: SelectOption) {
