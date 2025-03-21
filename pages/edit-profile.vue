@@ -99,6 +99,8 @@ function saveProfile() {
     completed: true,
   }
   profileApi.put(updatedProfile)
+
+  navigateTo('/dashboard')
 }
 </script>
 
