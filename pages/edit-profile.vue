@@ -20,9 +20,10 @@
           <div v-if="profileForm.role.option === 'supervisor'" class="flex gap-4">
             <label class="w-[5.25rem] shrink-0 flex justify-end mt-1">Employees:</label>
             <div class="grow flex flex-col gap-2">
-              <div v-if="profileForm.employees.length > 0" class="flex flex-col gap-2 bg-slate-50 px-2 py-1 border border-slate-300 rounded-md">
-                <div v-for="employee in profileForm.employees" :key="employee._id">
-                  {{ `${employee.lastName}, ${employee.firstName}` }}
+              <div v-if="profileForm.employees.length > 0" class="flex flex-col bg-slate-50 py-1 border border-slate-300 rounded-md">
+                <div v-for="employee in profileForm.employees" :key="employee._id" class="icon-hover flex justify-between items-center px-2 py-0.5">
+                  <span>{{ `${employee.lastName}, ${employee.firstName}` }}</span>
+                  <Icon icon="heroicons:x-mark" class="w-5 h-5 cursor-pointer text-red-500" @click="removeEmployee(employee)" />
                 </div>
               </div>
               <MyaUserSelect v-model:users="profileForm.employees" placeholder="Select Employee" mode="multiple" @select="addEmployee($event)" />
@@ -38,6 +39,8 @@
 </template>
 
 <script setup lang="ts">
+import { Icon } from '@iconify/vue'
+
 const authStore = useAuthStore()
 const profile = authStore.profile
 
@@ -76,6 +79,10 @@ function addEmployee(user: User) {
   profileForm.value.employees.push(user)
 }
 
+function removeEmployee(user: User) {
+  profileForm.value.employees = profileForm.value.employees.filter((emp: User) => emp._id !== user._id)
+}
+
 function saveProfile() {
   const authUser = authStore.user as User
 
@@ -94,3 +101,14 @@ function saveProfile() {
   profileApi.put(updatedProfile)
 }
 </script>
+
+<style scoped>
+.icon-hover svg {
+  transform: scale(0);
+}
+
+.icon-hover:hover svg {
+  transform: scale(1);
+  transition: transform 0.3s cubic-bezier(.3,1.2,.68,1.11);
+}
+</style>

@@ -45,6 +45,7 @@ const authStore = useAuthStore()
 const selectedUser = defineModel<User | null>()
 const selectedUsers = defineModel<User[]>('users')
 const userSearch = ref('')
+const allUsers = ref<User[]>([])
 
 function getFullName(user: User) {
   return `${user.lastName}, ${user.firstName}`
@@ -83,11 +84,16 @@ watch(userSearch, () => {
   searchUsers()
 })
 
+watch(selectedUsers, () => {
+  setUsers(allUsers.value)
+})
+
 async function initializeUsers() {
   try {
     const userResults = await userApi.getMany({ search: '' })
 
     if (userResults) {
+      allUsers.value = userResults
       setUsers(userResults)
       return
     }

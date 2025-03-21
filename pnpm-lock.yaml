@@ -51,6 +51,9 @@ importers:
       '@antfu/eslint-config':
         specifier: ^4.2.0
         version: 4.3.0(@typescript-eslint/utils@8.25.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(@vue/compiler-sfc@3.5.13)(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2)
+      '@iconify/icons-heroicons':
+        specifier: ^1.2.9
+        version: 1.2.9
       '@nuxt/eslint':
         specifier: ^1.0.1
         version: 1.1.0(@vue/compiler-sfc@3.5.13)(eslint@9.21.0(jiti@2.4.2))(magicast@0.3.5)(typescript@5.8.2)(vite@6.2.0(@types/node@22.13.7)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0))
@@ -709,6 +712,9 @@ packages:
   '@humanwhocodes/retry@0.4.2':
     resolution: {integrity: sha512-xeO57FpIu4p1Ri3Jq/EXq4ClRm86dVF2z/+kvFnyqVYRavTZmaFaUBbWCOuuTh0o/g7DSsk6kc2vrS4Vl5oPOQ==}
     engines: {node: '>=18.18'}
+
+  '@iconify/icons-heroicons@1.2.9':
+    resolution: {integrity: sha512-Zx+5+lj8wKnNxOhRPXBXkrA4qthpS1tnsbzxT7AzKnkdm2wdvDGBRTb+FYMp31HFv5MHT6BjrTCBgZ9p84cvug==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -5438,6 +5444,10 @@ snapshots:
   '@humanwhocodes/retry@0.3.1': {}
 
   '@humanwhocodes/retry@0.4.2': {}
+
+  '@iconify/icons-heroicons@1.2.9':
+    dependencies:
+      '@iconify/types': 2.0.0
 
   '@iconify/types@2.0.0': {}
 

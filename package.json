@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.2.0",
+    "@iconify/icons-heroicons": "^1.2.9",
     "@nuxt/eslint": "^1.0.1",
     "eslint": "^9.20.1",
     "typescript": "^5.7.3"
