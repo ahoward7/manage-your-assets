@@ -24,6 +24,7 @@ function importAssets() {
     const formData = new FormData()
 
     formData.append('schemaName', 'Asset')
+    formData.append('category', 'Assets')
     formData.append('user', JSON.stringify(authStore.user))
 
     Array.from(files).forEach((file) => {

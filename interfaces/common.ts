@@ -12,5 +12,15 @@ export interface ProfileForm {
 }
 
 export interface Asset {
-  [key: string]: string | Asset | null
+  schema: string
+  data: {
+    _id: string
+    schema: string
+    [key: string]: string | Asset | null
+  }
+  created: Date
+  updated: Date
+  createdBy: string
+  updatedBy: string
+  owner: string
 }
